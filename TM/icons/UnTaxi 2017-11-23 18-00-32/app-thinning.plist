@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>variants</key>
+	<dict>
+		<key>Apps/UnTaxi-iPad 2-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>4722259</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>4722259</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>12575349</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>12575349</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad2,3</string>
+				<string>iPad2,2</string>
+				<string>iPad2,1</string>
+				<string>iPad2,4</string>
+				<string>iPad2,7</string>
+				<string>iPad2,6</string>
+				<string>iPad2,5</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad 2</string>
+				<string>iPad 2</string>
+				<string>iPad 2</string>
+				<string>iPad 2</string>
+				<string>iPad mini</string>
+				<string>iPad mini</string>
+				<string>iPad mini</string>
+			</array>
+		</dict>
+		<key>Apps/UnTaxi-iPad Pro (12.9-inch) (2nd generation)-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>4764664</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>4764664</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>12617896</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>12617896</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad7,4</string>
+				<string>iPad7,3</string>
+				<string>iPad7,2</string>
+				<string>iPad7,1</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad Pro (10.5-inch)</string>
+				<string>iPad Pro (10.5-inch)</string>
+				<string>iPad Pro (12.9-inch) (2nd generation)</string>
+				<string>iPad Pro (12.9-inch) (2nd generation)</string>
+			</array>
+		</dict>
+		<key>Apps/UnTaxi-iPad Pro (12.9-inch)-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>4722299</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>4722299</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>12575847</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>12575847</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad3,3</string>
+				<string>iPad3,1</string>
+				<string>iPad3,2</string>
+				<string>iPad3,4</string>
+				<string>iPad3,5</string>
+				<string>iPad3,6</string>
+				<string>iPad6,11</string>
+				<string>iPad6,12</string>
+				<string>iPad4,1</string>
+				<string>iPad4,2</string>
+				<string>iPad4,3</string>
+				<string>iPad5,3</string>
+				<string>iPad5,4</string>
+				<string>iPad6,8</string>
+				<string>iPad6,7</string>
+				<string>iPad4,5</string>
+				<string>iPad4,6</string>
+				<string>iPad4,4</string>
+				<string>iPad4,7</string>
+				<string>iPad4,8</string>
+				<string>iPad4,9</string>
+				<string>iPad5,1</string>
+				<string>iPad5,2</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad (3rd generation)</string>
+				<string>iPad (3rd generation)</string>
+				<string>iPad (3rd generation)</string>
+				<string>iPad (4th generation)</string>
+				<string>iPad (4th generation)</string>
+				<string>iPad (4th generation)</string>
+				<string>iPad (5th generation)</string>
+				<string>iPad (5th generation)</string>
+				<string>iPad Air</string>
+				<string>iPad Air</string>
+				<string>iPad Air</string>
+				<string>iPad Air 2</string>
+				<string>iPad Air 2</string>
+				<string>iPad Pro (12.9-inch)</string>
+				<string>iPad Pro (12.9-inch)</string>
+				<string>iPad mini 2</string>
+				<string>iPad mini 2</string>
+				<string>iPad mini 2</string>
+				<string>iPad mini 3</string>
+				<string>iPad mini 3</string>
+				<string>iPad mini 3</string>
+				<string>iPad mini 4</string>
+				<string>iPad mini 4</string>
+			</array>
+		</dict>
+		<key>Apps/UnTaxi-iPad Pro (9.7-inch).ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>4810620</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>4810620</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>12664810</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>12664810</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPad6,3</string>
+				<string>iPad6,4</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPad Pro (9.7-inch)</string>
+				<string>iPad Pro (9.7-inch)</string>
+			</array>
+		</dict>
+		<key>Apps/UnTaxi-iPhone 5s-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>4722255</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>4722255</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>12575524</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>12575524</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone4,1</string>
+				<string>iPhone5,1</string>
+				<string>iPhone5,2</string>
+				<string>iPhone5,4</string>
+				<string>iPhone5,3</string>
+				<string>iPhone6,1</string>
+				<string>iPhone6,2</string>
+				<string>iPhone7,2</string>
+				<string>iPhone8,1</string>
+				<string>iPhone8,4</string>
+				<string>iPod5,1</string>
+				<string>iPod7,1</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 4S</string>
+				<string>iPhone 5</string>
+				<string>iPhone 5</string>
+				<string>iPhone 5c</string>
+				<string>iPhone 5c</string>
+				<string>iPhone 5s</string>
+				<string>iPhone 5s</string>
+				<string>iPhone 6</string>
+				<string>iPhone 6s</string>
+				<string>iPhone SE</string>
+				<string>iPod touch</string>
+				<string>iPod touch (6th generation)</string>
+			</array>
+		</dict>
+		<key>Apps/UnTaxi-iPhone 6s Plus-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>4955896</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>4955896</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>12810062</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>12810062</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone7,1</string>
+				<string>iPhone8,2</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 6 Plus</string>
+				<string>iPhone 6s Plus</string>
+			</array>
+		</dict>
+		<key>Apps/UnTaxi-iPhone 7 Plus-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>5042674</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>5042674</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>12899174</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>12899174</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone9,4</string>
+				<string>iPhone9,2</string>
+				<string>iPhone10,5</string>
+				<string>iPhone10,2</string>
+				<string>iPhone10,3</string>
+				<string>iPhone10,6</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 7 Plus</string>
+				<string>iPhone 7 Plus</string>
+				<string>iPhone 8 Plus</string>
+				<string>iPhone 8 Plus</string>
+				<string>iPhone X</string>
+				<string>iPhone X</string>
+			</array>
+		</dict>
+		<key>Apps/UnTaxi-iPhone 8-etc.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>4764720</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>4764720</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>12617906</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>12617906</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+			<key>variantIds</key>
+			<array>
+				<string>iPhone9,1</string>
+				<string>iPhone9,3</string>
+				<string>iPhone10,1</string>
+				<string>iPhone10,4</string>
+			</array>
+			<key>variantNames</key>
+			<array>
+				<string>iPhone 7</string>
+				<string>iPhone 7</string>
+				<string>iPhone 8</string>
+				<string>iPhone 8</string>
+			</array>
+		</dict>
+		<key>Apps/UnTaxi.ipa</key>
+		<dict>
+			<key>limitUncompressedInitialPrefetchedODR</key>
+			<integer>2147483648</integer>
+			<key>onDemandResourcesAssetPacks</key>
+			<dict/>
+			<key>sizeCompressedApp</key>
+			<integer>5696250</integer>
+			<key>sizeCompressedAppAndODR</key>
+			<integer>5696250</integer>
+			<key>sizeCompressedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedApp</key>
+			<integer>13573441</integer>
+			<key>sizeUncompressedAppAndODR</key>
+			<integer>13573441</integer>
+			<key>sizeUncompressedInitialPrefetchedODR</key>
+			<integer>0</integer>
+			<key>sizeUncompressedInitialPrefetchedODRExceedsLimit</key>
+			<false/>
+			<key>sizeUncompressedODR</key>
+			<integer>0</integer>
+			<key>tagsUncompressedInitialPrefetchedODR</key>
+			<array/>
+		</dict>
+	</dict>
+</dict>
+</plist>

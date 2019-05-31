@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UnTaxi.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>3FE2CD346EE655502D36F54C0D56482403B565BC</string>
+				<key>dateExpires</key>
+				<string>11/22/18</string>
+				<key>type</key>
+				<string>iOS Distribution</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>3FE2CD346EE655502D36F54C0D56482403B565BC</string>
+						<key>dateExpires</key>
+						<string>11/22/18</string>
+						<key>type</key>
+						<string>iOS Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>AFNetworking.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>2VMNV5JH5M</string>
+						<key>name</key>
+						<string>Donelkys Santana Medina</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>3FE2CD346EE655502D36F54C0D56482403B565BC</string>
+						<key>dateExpires</key>
+						<string>11/22/18</string>
+						<key>type</key>
+						<string>iOS Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>Canvas.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>2VMNV5JH5M</string>
+						<key>name</key>
+						<string>Donelkys Santana Medina</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>3FE2CD346EE655502D36F54C0D56482403B565BC</string>
+						<key>dateExpires</key>
+						<string>11/22/18</string>
+						<key>type</key>
+						<string>iOS Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>SocketIO.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>2VMNV5JH5M</string>
+						<key>name</key>
+						<string>Donelkys Santana Medina</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>3FE2CD346EE655502D36F54C0D56482403B565BC</string>
+						<key>dateExpires</key>
+						<string>11/22/18</string>
+						<key>type</key>
+						<string>iOS Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>StarscreamSocketIO.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>2VMNV5JH5M</string>
+						<key>name</key>
+						<string>Donelkys Santana Medina</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>3FE2CD346EE655502D36F54C0D56482403B565BC</string>
+						<key>dateExpires</key>
+						<string>11/22/18</string>
+						<key>type</key>
+						<string>iOS Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>SwiftyJSON.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>2VMNV5JH5M</string>
+						<key>name</key>
+						<string>Donelkys Santana Medina</string>
+					</dict>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>2VMNV5JH5M.com.xoait.UnTaxi</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>2VMNV5JH5M</string>
+				<key>get-task-allow</key>
+				<false/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>2VMNV5JH5M.com.xoait.UnTaxi</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>UnTaxi.temp_caseinsensitive_rename.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>42b5b59b-05fa-495e-868f-0ccbfabd4dc5</string>
+				<key>name</key>
+				<string>iOS Team Ad Hoc Provisioning Profile: com.xoait.UnTaxi</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>2VMNV5JH5M</string>
+				<key>name</key>
+				<string>Donelkys Santana Medina</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
