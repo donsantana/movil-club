@@ -29,13 +29,19 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   var taxi : CTaxi!
   var login = [String]()
   var idusuario : String = ""
-  var indexselect = Int()
   var contador = 0
   var centro = CLLocationCoordinate2D()
-  var TelefonosCallCenter = [CTelefono]()
   var opcionAnterior : IndexPath!
   var evaluacion: CEvaluacion!
+  var transporteIndex: Int! = -1
   var tipoTransporte: String!
+  
+  
+  var origenCell = Bundle.main.loadNibNamed("OrigenCell", owner: self, options: nil)?.first as! OrigenViewCell
+  var voucherCell = Bundle.main.loadNibNamed("VoucherCell", owner: self, options: nil)?.first as! VoucherViewCell
+  var contactoCell = Bundle.main.loadNibNamed("ContactoCell", owner: self, options: nil)?.first as! ContactoViewCell
+  var reservaView: UIView!
+  //var reservaDatePicker: UIDatePicker!
   
   //var SMSVoz = CSMSVoz()
   
@@ -54,23 +60,24 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   var DireccionesArray = [[String]]()//[["Dir 1", "Ref1"],["Dir2","Ref2"],["Dir3", "Ref3"],["Dir4","Ref4"],["Dir 5", "Ref5"]]//["Dir 1", "Dir2"]
   
   //Menu variables
-  var MenuArray = [MenuData(imagen: "solicitud", title: "En proceso"), MenuData(imagen: "callCenter", title: "Operadora"),MenuData(imagen: "clave", title: "Perfil"),MenuData(imagen: "infoMenu", title: "Información"),MenuData(imagen: "transporteMenu", title: "Tipo de Transporte"),MenuData(imagen: "compartir", title: "Compartir app"), MenuData(imagen: "sesion", title: "Cerrar Sesion"), MenuData(imagen: "salir2", title: "Salir")]
-  //variables de interfaz
+  var MenuArray = [MenuData(imagen: "solicitud", title: "Solicitudes en proceso"), MenuData(imagen: "callCenter", title: "Operadora"),MenuData(imagen: "clave", title: "Perfil"),MenuData(imagen: "infoMenu", title: "Información"),MenuData(imagen: "transporteMenu", title: "Tipo de Transporte"),MenuData(imagen: "compartir", title: "Compartir app"), MenuData(imagen: "sesion", title: "Cerrar Sesion"), MenuData(imagen: "salir2", title: "Salir")]
   
+  //variables de interfaz
+  var TelefonoContactoText: UITextField!
   
   //CONSTRAINTS
   var btnViewTop: NSLayoutConstraint!
   
   @IBOutlet weak var origenIcono: UIImageView!
   @IBOutlet weak var mapaVista: MKMapView!
-  @IBOutlet weak var adsBannerView: GADBannerView!
-
+  @IBOutlet weak var headerView: UIView!
+  
   @IBOutlet weak var transportIcon: UIImageView!
-
+  
   @IBOutlet weak var LocationBtn: UIButton!
   @IBOutlet weak var SolicitarBtn: UIButton!
   @IBOutlet weak var formularioSolicitud: UIView!
-  @IBOutlet weak var SolicitudView: CSAnimationView!
+  @IBOutlet weak var SolicitudView: UIView!
   
   
   //MENU BUTTONS
@@ -79,27 +86,29 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   @IBOutlet weak var NombreUsuario: UILabel!
   @IBOutlet weak var TransparenciaView: UIVisualEffectView!
   
-  
   @IBOutlet weak var SolPendientesView: UIView!
-  
-  
   
   @IBOutlet weak var AlertaEsperaView: UIView!
   @IBOutlet weak var MensajeEspera: UITextView!
-
+  @IBOutlet weak var updateOfertaView: UIView!
+  @IBOutlet weak var SendOferta: UIButton!
+  @IBOutlet weak var newOfertaText: UILabel!
+  @IBOutlet weak var up25: UIButton!
+  @IBOutlet weak var down25: UIButton!
+  @IBOutlet weak var solicitudInProcess: UILabel!
   
   @IBOutlet weak var CancelarSolicitudProceso: UIButton!
   
   @IBOutlet weak var solicitudFormTable: UITableView!
   
   //CUSTOM CONSTRAINTS
-//  @IBOutlet weak var textFieldHeight: NSLayoutConstraint!
-//  //@IBOutlet weak var recordarViewBottom: NSLayoutConstraint!
-//  //@IBOutlet weak var origenTextBottom: NSLayoutConstraint!
-//  @IBOutlet weak var datosSolictudBottom: NSLayoutConstraint!
-//  @IBOutlet weak var contactoViewTop: NSLayoutConstraint!
-//  @IBOutlet weak var contactViewHeight: NSLayoutConstraint!
-//  @IBOutlet weak var voucherViewTop: NSLayoutConstraint!
+  //  @IBOutlet weak var textFieldHeight: NSLayoutConstraint!
+  //  //@IBOutlet weak var recordarViewBottom: NSLayoutConstraint!
+  //  //@IBOutlet weak var origenTextBottom: NSLayoutConstraint!
+  //  @IBOutlet weak var datosSolictudBottom: NSLayoutConstraint!
+  //  @IBOutlet weak var contactoViewTop: NSLayoutConstraint!
+  //  @IBOutlet weak var contactViewHeight: NSLayoutConstraint!
+  //  @IBOutlet weak var voucherViewTop: NSLayoutConstraint!
   
   
   
@@ -111,24 +120,30 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     mapaVista.delegate = self
     coreLocationManager = CLLocationManager()
     coreLocationManager.delegate = self
-    self.referenciaText.delegate = self
-    self.NombreContactoText.delegate = self
-    self.TelefonoContactoText.delegate = self
-    self.origenText.delegate = self
-    self.destinoText.delegate = self
-    self.solicitudFormTable.delegate = self
+    //    self.origenCell.referenciaText.delegate = self
+    //self.contactoCell.contactoNameText.delegate = self
+    //self.TelefonoContactoText.delegate = self
+    //    self.origenCell.origenText.delegate = self
+    //    self.origenCell.destinoText.delegate = self
+    //    self.solicitudFormTable.delegate = self
+    self.origenCell.detallesText.delegate = self
     
     self.navigationItem.title = Customization.nameShowed
     
     //solicitud de autorización para acceder a la localización del usuario
-    self.NombreUsuario.text = myvariables.cliente.nombreApellidos
+    self.NombreUsuario.text = GlobalVariables.cliente.nombreApellidos
     self.NombreUsuario.textColor = .white
     self.MenuTable.delegate = self
     self.MenuView1.layer.borderColor = UIColor.lightGray.cgColor
     self.MenuView1.layer.borderWidth = 0.3
     self.MenuView1.layer.masksToBounds = false
-    self.NombreContactoText.setBottomBorder(borderColor: UIColor.lightGray)
-    self.TelefonoContactoText.setBottomBorder(borderColor: UIColor.lightGray)
+    self.updateOfertaView.addShadow()
+    self.AlertaEsperaView.addShadow()
+
+    //    self.contactoCell.contactoNameText.setBottomBorder(borderColor: UIColor.lightGray)
+    //    self.TelefonoContactoText.setBottomBorder(borderColor: UIColor.lightGray)
+    
+    self.SolicitudView.addShadow()
     
     self.MenuView1.backgroundColor = Customization.primaryColor
     self.SolPendientesView.backgroundColor = Customization.primaryColor
@@ -145,22 +160,13 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     let MenuTapGesture = UITapGestureRecognizer(target: self, action: #selector(ocultarMenu))
     self.TransparenciaView.addGestureRecognizer(MenuTapGesture)
     
+    self.tipoTransporte = transporteIndex != -1 ? GlobalConstants.tranporteArray[transporteIndex - 1] : ""
     self.transportIcon.image = UIImage(named: self.tipoTransporte)
     
-//    //Calculate the custom constraints
-//    var spaceBetween = CGFloat(20)
-//    if UIScreen.main.bounds.height < 736{
-//      self.textFieldHeight.constant = 40
-//      spaceBetween = 10
-//    }else{
-//      self.textFieldHeight.constant = 45
-//    }
-//
-//    //self.recordarViewBottom.constant = -spaceBetween
-//    //self.origenTextBottom.constant = -spaceBetween
-//    self.datosSolictudBottom.constant = -spaceBetween
-//    self.contactoViewTop.constant = spaceBetween
-//    self.voucherViewTop.constant = spaceBetween
+    
+    //INITIALIZING INTERFACES VARIABLES
+    self.TelefonoContactoText = self.contactoCell.telefonoText
+    self.reservaView = self.origenCell.reservaView
     
     if let tempLocation = self.coreLocationManager.location?.coordinate{
       self.origenAnotacion.coordinate = (coreLocationManager.location?.coordinate)!
@@ -174,28 +180,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     let region = MKCoordinateRegion(center: self.origenAnotacion.coordinate, span: span)
     self.mapaVista.setRegion(region, animated: true)
     
-    if myvariables.socket.status.active{
-      let ColaHilos = OperationQueue()
-      let Hilos : BlockOperation = BlockOperation (block: {
-        self.SocketEventos()
-        self.timer.invalidate()
-        let url = "#U,# \n"
-        self.EnviarSocket(url)
-        let telefonos = "#Telefonos,# \n"
-        self.EnviarSocket(telefonos)
-        let datos = "OT"
-        self.EnviarSocket(datos)
-      })
-      ColaHilos.addOperation(Hilos)
-    }else{
-      self.Reconect()
-    }
-    
-    //self.referenciaText.enablesReturnKeyAutomatically = false
-    //self.origenText.delegate = self
-    self.TablaDirecciones.delegate = self
-    
-    self.origenText.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    self.origenCell.origenText.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     
     //PEDIR PERMISO PARA EL MICROPHONO
     switch AVAudioSession.sharedInstance().recordPermission {
@@ -214,14 +199,13 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     default:
       break
     }
-     self.addEnvirSolictudBtn()
-    
+    self.addEnvirSolictudBtn()
   }
   
   override func viewDidAppear(_ animated: Bool){
-    self.NombreContactoText.setBottomBorder(borderColor: UIColor.black)
-    self.TelefonoContactoText.setBottomBorder(borderColor: UIColor.black)
-    self.btnViewTop = NSLayoutConstraint(item: self.BtnsView, attribute: .top, relatedBy: .equal, toItem: self.origenText, attribute: .bottom, multiplier: 1, constant: 0)
+    self.contactoCell.contactoNameText.setBottomBorder(borderColor: UIColor.black)
+    self.contactoCell.telefonoText.setBottomBorder(borderColor: UIColor.black)
+    //self.btnViewTop = NSLayoutConstraint(item: self.BtnsView, attribute: .top, relatedBy: .equal, toItem: self.origenCell.origenText, attribute: .bottom, multiplier: 1, constant: 0)
   }
   
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -229,6 +213,14 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     self.SolicitarBtn.isHidden = false
   }
   
+  
+  func showTransporteMenu() {
+    let vc = R.storyboard.main.transpMenuView()
+    self.navigationController?.pushViewController(vc!, animated: true)
+//    let navController = UINavigationController(rootViewController: vc!)
+//    let appdelegate = UIApplication.shared.delegate as! AppDelegate
+//    appdelegate.window!.rootViewController = navController
+  }
   
   
   //MARK:- FUNCIONES PROPIAS
@@ -274,7 +266,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   //RECONECT SOCKET
   @objc func Reconect(){
     if contador <= 5 {
-      myvariables.socket.connect()
+      GlobalVariables.socket.connect()
       contador += 1
     }
     else{
@@ -302,8 +294,8 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   //FUNCIÓN ENVIAR AL SOCKET
   @objc func EnviarSocket(_ datos: String){
     if CConexionInternet.isConnectedToNetwork() == true{
-      if myvariables.socket.status.active && self.EnviosCount <= 3{
-        myvariables.socket.emit("data",datos)
+      if GlobalVariables.socket.status.active && self.EnviosCount <= 3{
+        GlobalVariables.socket.emit("data",datos)
         //self.EnviarTimer(estado: 1, datos: datos)
       }else{
         let alertaDos = UIAlertController (title: "Sin Conexión", message: "No se puede conectar al servidor por favor intentar otra vez.", preferredStyle: UIAlertController.Style.alert)
@@ -320,11 +312,11 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   
   @objc func EnviarSocket1(_ timer: Timer){
     if CConexionInternet.isConnectedToNetwork() == true{
-      if myvariables.socket.status.active && self.EnviosCount <= 3 {
+      if GlobalVariables.socket.status.active && self.EnviosCount <= 3 {
         self.EnviosCount += 1
         let userInfo = timer.userInfo as! Dictionary<String, AnyObject>
         var datos = (userInfo["datos"] as! String)
-        myvariables.socket.emit("data",datos)
+        GlobalVariables.socket.emit("data",datos)
       }else{
         let alertaDos = UIAlertController (title: "Sin Conexión", message: "No se puede conectar al servidor por favor intentar otra vez.", preferredStyle: UIAlertController.Style.alert)
         alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
@@ -355,7 +347,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     self.view.endEditing(true)
     self.coreLocationManager.startUpdatingLocation()
     self.origenAnotacion.coordinate = (self.coreLocationManager.location?.coordinate)!
-    self.origenIcono.image = UIImage(named: "origen2")
+    self.origenIcono.image = UIImage(named: "origen")
     self.origenIcono.isHidden = true
     self.origenAnotacion.title = "origen"
     let span = MKCoordinateSpan.init(latitudeDelta: 0.005, longitudeDelta: 0.005)
@@ -411,11 +403,25 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     }
   }
   
+  func getCoordinatesFromAddress(address: String)->CLLocationCoordinate2D {
+    var resultCoordinates = CLLocationCoordinate2D()
+    let geocoder = CLGeocoder()
+    geocoder.geocodeAddressString(address, completionHandler: {(placemarks, error) -> Void in
+      if((error) != nil){
+        print("Error", error ?? "")
+      }
+      if let placemark = placemarks?.first {
+        resultCoordinates = placemark.location!.coordinate
+        print("Lat: \(resultCoordinates.latitude) -- Long: \(resultCoordinates.longitude)")
+      }
+    })
+    return resultCoordinates
+  }
+  
   
   //FUNCION PARA LISTAR SOLICITUDES PENDIENTES
   func ListSolicitudPendiente(_ listado : [String]){
     //#LoginPassword,loginok,idusuario,idrol,idcliente,nombreapellidos,cantsolpdte,idsolicitud,idtaxi,cod,fechahora,lattaxi,lngtaxi, latorig,lngorig,latdest,lngdest,telefonoconductor
-    print("pendiente pinga \(listado)")
     var lattaxi = String()
     var longtaxi = String()
     var i = 7
@@ -429,36 +435,36 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
         lattaxi = listado[i + 4]
         longtaxi = listado[i + 5]
       }
-      solicitudpdte.idSolicitud = listado[i]
-      solicitudpdte.DatosCliente(cliente: myvariables.cliente)
-      solicitudpdte.DatosSolicitud(dirorigen: "", referenciaorigen: "", dirdestino: "", latorigen: listado[i + 6], lngorigen: listado[i + 7], latdestino: listado[i + 8], lngdestino: listado[i + 9],FechaHora: listado[i + 3])
-      if listado[i + 1] != "null"{
-        solicitudpdte.DatosTaxiConductor(idtaxi: listado[i + 1], matricula: "", codigovehiculo: listado[i + 2], marcaVehiculo: "", colorVehiculo: "", lattaxi: lattaxi, lngtaxi: longtaxi, idconductor: "", nombreapellidosconductor: "", movilconductor: listado[i + 10], foto: "")
-      }
-      myvariables.solpendientes.append(solicitudpdte)
-      if solicitudpdte.idTaxi != ""{
-        myvariables.solicitudesproceso = true
-      }
+//      solicitudpdte.idSolicitud = listado[i]
+//      solicitudpdte.DatosCliente(cliente: GlobalVariables.cliente)
+//      solicitudpdte.DatosSolicitud(idSolicitud: <#String#>, dirorigen: "", referenciaorigen: "", dirdestino: "", latorigen: listado[i + 6], lngorigen: listado[i + 7], latdestino: listado[i + 8], lngdestino: listado[i + 9],FechaHora: listado[i + 3])
+//      if listado[i + 1] != "null"{
+//        solicitudpdte.DatosTaxiConductor(idtaxi: listado[i + 1], matricula: "", codigovehiculo: listado[i + 2], marcaVehiculo: "", colorVehiculo: "", lattaxi: lattaxi, lngtaxi: longtaxi, idconductor: "", nombreapellidosconductor: "", movilconductor: listado[i + 10], foto: "")
+//      }
+//      GlobalVariables.solpendientes.append(solicitudpdte)
+//      if solicitudpdte.idTaxi != ""{
+//        GlobalVariables.solicitudesproceso = true
+//      }
       i += 11
     }
   }
   
   //Funcion para Mostrar Datos del Taxi seleccionado
-  func AgregarTaxiSolicitud(_ temporal : [String]){
-    //#Aceptada, idsolicitud, idconductor, nombreApellidosConductor, movilConductor, URLfoto, idTaxi, Codvehiculo, matricula, marca_modelo, color, latTaxi, lngTaxi
-    for solicitud in myvariables.solpendientes{
-      if solicitud.idSolicitud == temporal[1]{
-        myvariables.solicitudesproceso = true
-        solicitud.DatosTaxiConductor(idtaxi: temporal[6], matricula: temporal[8], codigovehiculo: temporal[7], marcaVehiculo: temporal[9],colorVehiculo: temporal[10], lattaxi: temporal[11], lngtaxi: temporal[12], idconductor: temporal[2], nombreapellidosconductor: temporal[3], movilconductor: temporal[4], foto: temporal[5])
-      }
-    }
-  }
+//  func AgregarTaxiSolicitud(_ temporal : [String]){
+//    //#Aceptada, idsolicitud, idconductor, nombreApellidosConductor, movilConductor, URLfoto, idTaxi, Codvehiculo, matricula, marca_modelo, color, latTaxi, lngTaxi
+//    for solicitud in GlobalVariables.solpendientes{
+//      if solicitud.idSolicitud == temporal[1]{
+//        GlobalVariables.solicitudesproceso = true
+//        solicitud.DatosTaxiConductor(idtaxi: temporal[6], matricula: temporal[8], codigovehiculo: temporal[7], marcaVehiculo: temporal[9],colorVehiculo: temporal[10], lattaxi: temporal[11], lngtaxi: temporal[12], idconductor: temporal[2], nombreapellidosconductor: temporal[3], movilconductor: temporal[4], foto: temporal[5])
+//      }
+//    }
+//  }
   
   
   //FUNCIÓN BUSCA UNA SOLICITUD DENTRO DEL ARRAY DE SOLICITUDES PENDIENTES DADO SU ID
   func BuscarSolicitudID(_ id : String)->CSolicitud{
     var temporal : CSolicitud!
-    for solicitudpdt in myvariables.solpendientes{
+    for solicitudpdt in GlobalVariables.solpendientes{
       if solicitudpdt.idSolicitud == id{
         temporal = solicitudpdt
       }
@@ -469,7 +475,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   func BuscarPosSolicitudID(_ id : String)->Int{
     var temporal = 0
     var posicion = -1
-    for solicitudpdt in myvariables.solpendientes{
+    for solicitudpdt in GlobalVariables.solpendientes{
       if solicitudpdt.idSolicitud == id{
         posicion = temporal
       }
@@ -483,7 +489,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     //Trama IN: #Solicitud, ok, idsolicitud, fechahora
     
     if Temporal[1] == "ok"{
-      myvariables.solpendientes.last!.RegistrarFechaHora(IdSolicitud: Temporal[2], FechaHora: Temporal[3])
+      GlobalVariables.solpendientes.last!.RegistrarFechaHora(IdSolicitud: Temporal[2], FechaHora: Temporal[3])
     }
     else{
       if Temporal[1] == "error"{
@@ -508,23 +514,22 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   
   
   //CREAR SOLICITUD CON LOS DATOS DEL CIENTE, SU LOCALIZACIÓN DE ORIGEN Y DESTINO
-  func CrearSolicitud(_ nuevaSolicitud: CSolicitud, voucher: String){
-    //#Solicitud, idcliente, nombrecliente, movilcliente, dirorig, referencia, dirdest,latorig,lngorig, latdest, lngdest, distancia, costo, #
+  func CrearTramaSolicitud(_ nuevaSolicitud: CSolicitud, voucher: String){
+    //#SO,idcliente,nombreapellidos,movil,dirorigen,referencia,dirdestino,latorigen,lngorigen,ladestino,lngdestino,distanciaorigendestino,valor oferta,voucher,detalle oferta,fecha reserva,tipo transporte,#
     formularioSolicitud.isHidden = true
     origenIcono.isHidden = true
-    myvariables.solpendientes.append(nuevaSolicitud)
+    GlobalVariables.solpendientes.append(nuevaSolicitud)
     
-    let datoscliente = nuevaSolicitud.idCliente + "," + nuevaSolicitud.nombreApellidos + "," + nuevaSolicitud.user
-    let datossolicitud = nuevaSolicitud.dirOrigen + "," + nuevaSolicitud.referenciaorigen + "," + "null"
-    let datosgeo = String(nuevaSolicitud.distancia) + "," + nuevaSolicitud.costo
-    let Datos = "#Solicitud" + "," + datoscliente + "," + datossolicitud + "," + String(nuevaSolicitud.origenCarrera.latitude) + "," + String(nuevaSolicitud.origenCarrera.longitude) + "," + "0.0" + "," + "0.0" + "," + datosgeo + "," + voucher + ",# \n"
-    //EnviarSocket(Datos)
-    self.EnviarTimer(estado: 1, datos: Datos)
+//    let datoscliente = "\(nuevaSolicitud.idCliente), \(nuevaSolicitud.nombreApellidos), \(nuevaSolicitud.user)"
+//    let datossolicitud = "\(nuevaSolicitud.dirOrigen), \(nuevaSolicitud.referenciaorigen), \(nuevaSolicitud.dirDestino), \(nuevaSolicitud.origenCoord.latitude), \(nuevaSolicitud.origenCoord.longitude), \(nuevaSolicitud.destinoCoord.latitude), \(nuevaSolicitud.destinoCoord.longitude)"
+//    let datosgeo = "\(nuevaSolicitud.distancia), \(nuevaSolicitud.valorOferta), , \(nuevaSolicitud.fechaReserva), \(nuevaSolicitud.tipoTransporte)"
+    let datos = "#SO,\(nuevaSolicitud.idCliente),\(nuevaSolicitud.nombreApellidos),\(nuevaSolicitud.user),\(nuevaSolicitud.dirOrigen),\(nuevaSolicitud.referenciaorigen),\(nuevaSolicitud.dirDestino),\(nuevaSolicitud.origenCoord.latitude),\(nuevaSolicitud.origenCoord.longitude),\(nuevaSolicitud.destinoCoord.latitude),\(nuevaSolicitud.destinoCoord.longitude),\(nuevaSolicitud.distancia),\(nuevaSolicitud.valorOferta),\(voucher),\(nuevaSolicitud.detallesOferta),\(nuevaSolicitud.getFechaISO()),\(nuevaSolicitud.tipoTransporte),# \n"
+    print(datos)
+    self.EnviarTimer(estado: 1, datos: datos)
     MensajeEspera.text = "Procesando..."
     self.AlertaEsperaView.isHidden = false
-    self.origenText.text?.removeAll()
-    self.RecordarSwitch.isOn = false
-    self.referenciaText.text?.removeAll()
+    self.origenCell.origenText.text?.removeAll()
+    self.origenCell.referenciaText.text?.removeAll()
   }
   
   
@@ -565,13 +570,13 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   
   /*func CancelarSolicitudes(_ motivo: String){
    //#Cancelarsolicitud, idSolicitud, idTaxi, motivo, "# \n"
-   let temp = (myvariables.solpendientes.last?.idTaxi)! + "," + motivo + "," + "# \n"
-   let Datos = "#Cancelarsolicitud" + "," + (myvariables.solpendientes.last?.idSolicitud)! + "," + temp
-   myvariables.solpendientes.removeLast()
-   if myvariables.solpendientes.count == 0 {
+   let temp = (GlobalVariables.solpendientes.last?.idTaxi)! + "," + motivo + "," + "# \n"
+   let Datos = "#Cancelarsolicitud" + "," + (GlobalVariables.solpendientes.last?.idSolicitud)! + "," + temp
+   GlobalVariables.solpendientes.removeLast()
+   if GlobalVariables.solpendientes.count == 0 {
    self.SolPendImage.isHidden = true
    CantSolPendientes.isHidden = true
-   myvariables.solicitudesproceso = false
+   GlobalVariables.solicitudesproceso = false
    }
    if motivo != "Conductor"{
    EnviarSocket(Datos)
@@ -580,11 +585,11 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   
   func CancelarSolicitudes(_ motivo: String){
     //#Cancelarsolicitud, idSolicitud, idTaxi, motivo, "# \n"
-    //let temp = (myvariables.solpendientes.last?.idTaxi)! + "," + motivo + "," + "# \n"
-    let Datos = "#Cancelarsolicitud" + "," + (myvariables.solpendientes.last?.idSolicitud)! + "," + "null" + "," + motivo + "," + "# \n"
-    myvariables.solpendientes.removeLast()
-    if myvariables.solpendientes.count == 0 {
-      myvariables.solicitudesproceso = false
+    //let temp = (GlobalVariables.solpendientes.last?.idTaxi)! + "," + motivo + "," + "# \n"
+    let Datos = "#CSO" + "," + (GlobalVariables.solpendientes.last?.idSolicitud)! + "," + "null" + "," + motivo + "," + "# \n"
+    GlobalVariables.solpendientes.removeLast()
+    if GlobalVariables.solpendientes.count == 0 {
+      GlobalVariables.solicitudesproceso = false
     }
     if motivo != "Conductor"{
       EnviarSocket(Datos)
@@ -598,7 +603,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
       try fileAudio.removeItem(atPath: AudioPath)
     }catch{
     }
-    let datos = "#SocketClose," + myvariables.cliente.idCliente + ",# \n"
+    let datos = "#SocketClose," + GlobalVariables.cliente.idCliente + ",# \n"
     EnviarSocket(datos)
     exit(3)
   }
@@ -643,66 +648,115 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   
   //ADD FOOTER TO SOLICITDFORMTABLE
   func addEnvirSolictudBtn(){
-    let enviarBtnView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 35))
-    let button:UIButton = UIButton.init(frame: CGRect(x: 0, y: 15, width: UIScreen.main.bounds.width, height: 20))
+    let enviarBtnView = UIView(frame: CGRect(x: 0, y: 0, width: self.SolicitudView.frame.width, height: 35))
+    let button:UIButton = UIButton.init(frame: CGRect(x: 0, y: 15, width: enviarBtnView.frame.width - 20, height: 20))
     button.setTitleColor(UIColor.darkGray, for: .normal)
     button.setTitle("ENVIAR SOLICITUD", for: .normal)
     button.titleLabel?.font = UIFont(name: "HelveticaNeue-Medium", size: 20)
     button.addTarget(self, action: #selector(self.enviarSolicitud), for: .touchUpInside)
-    let separatorView = UIView(frame: CGRect(x: 5, y: 0, width: UIScreen.main.bounds.width - 5, height: 1))
+    let separatorView = UIView(frame: CGRect(x: 5, y: 0, width: enviarBtnView.frame.width - 10, height: 1))
     separatorView.backgroundColor = .darkGray
+    
     enviarBtnView.addSubview(separatorView)
     enviarBtnView.addSubview(button)
     self.solicitudFormTable.tableFooterView = enviarBtnView
   }
   
   @objc func enviarSolicitud(){
-    if !self.destinoText.isHidden && self.destinoText.text!.isEmpty{
-      let alertaDos = UIAlertController (title: "Dirección de Destino", message: "Si desea pagar con Voucher necesita escribir su dirección de Destino.", preferredStyle: UIAlertController.Style.alert)
+    //#SO,idcliente,nombreapellidos,movil,dirorigen,referencia,dirdestino,latorigen,lngorigen,ladestino,lngdestino,distanciaorigendestino,valor oferta,voucher,detalle oferta,fecha reserva,tipo transporte,#
+    
+    if !self.origenCell.origenText.text!.isEmpty && !self.origenCell.destinoText.text!.isEmpty && !self.origenCell.ofertaText.text!.isEmpty{
+      
+      let nombreContactar = self.contactoCell.contactoNameText.text!.isEmpty ? GlobalVariables.cliente.nombreApellidos : self.cleanTextField(textfield: self.contactoCell.contactoNameText)
+      
+      let telefonoContactar = self.contactoCell.telefonoText.text!.isEmpty ? GlobalVariables.cliente.user : self.cleanTextField(textfield: self.contactoCell.telefonoText)
+      
+      let clienteSolicitud = self.contactoCell.contactoNameText.text!.isEmpty ? GlobalVariables.cliente : CCliente(idUsuario: GlobalVariables.cliente.idUsuario, idcliente: GlobalVariables.cliente.idCliente, user: telefonoContactar!, nombre: nombreContactar!, email: GlobalVariables.cliente.email, empresa: GlobalVariables.cliente.empresa)
+      
+      let origen = self.cleanTextField(textfield: self.origenCell.origenText)
+      
+      let origenCoord = self.miposicion.coordinate
+      
+      let referencia = self.cleanTextField(textfield: self.origenCell.referenciaText)
+      
+      let destino = self.cleanTextField(textfield: self.origenCell.destinoText)
+      
+      let destinoCoord = self.miposicion.coordinate
+      
+      //let valorOferta = self.origenCell.ofertaText.text
+      
+      let voucher = self.voucherCell.voucherSwitch.isOn ? "1" : "0"
+      
+      //let detalleOferta = ""
+      
+      //let fechaReserva = self.origenCell.fechaReserva.text
+      
+      //let tipoTransporte = self.transporteIndex
+      
+      mapaVista.removeAnnotations(mapaVista.annotations)
+      
+      let nuevaSolicitud = CSolicitud()
+      let fechaReserva = ""//self.origenCell.fechaReserva.isHidden == true ? "" : self.origenCell.reservaDate.getISODate()
+      nuevaSolicitud.DatosCliente(cliente: clienteSolicitud!)
+      nuevaSolicitud.DatosSolicitud(idSolicitud: "test", fechaHora: "Date", dirOrigen: origen, referenciaOrigen: referencia, dirDestino: destino, latOrigen: origenCoord.latitude, lngOrigen: origenCoord.longitude, latDestino: destinoCoord.latitude, lngDestino: destinoCoord.longitude, valorOferta: self.origenCell.ofertaText.text!, detallesOferta: self.origenCell.detallesText.text!, fechaReserva: fechaReserva, tipoTransporte: String(self.transporteIndex))
+   
+      self.CrearTramaSolicitud(nuevaSolicitud,voucher: voucher)
+      DibujarIconos([self.origenAnotacion])
+      view.endEditing(true)
+      
+    }else{
+      let alertaDos = UIAlertController (title: "Error en el formulario", message: "Por favor debe llegar todos los campos subrayados con una línea roja porque son requeridos.", preferredStyle: UIAlertController.Style.alert)
       alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
-        self.destinoText.becomeFirstResponder()
+        //self.origenCell.destinoText.becomeFirstResponder()
       }))
       self.present(alertaDos, animated: true, completion: nil)
-    }else{
-      if !(self.origenText.text?.isEmpty)! {
-        var voucher = "0"
-        let origen = self.cleanTextField(textfield: self.origenText)
-        
-        let referencia = self.cleanTextField(textfield: self.referenciaText)
-        
-        let destino = self.cleanTextField(textfield: self.destinoText)
-        
-        let nombreContactar = self.NombreContactoText.text!.isEmpty ? myvariables.cliente.nombreApellidos : self.cleanTextField(textfield: self.NombreContactoText)
-        
-        let telefonoContactar = self.TelefonoContactoText.text!.isEmpty ? myvariables.cliente.user : self.cleanTextField(textfield: self.TelefonoContactoText)
-        
-        let clienteSolicitud = self.NombreContactoText.text!.isEmpty ? myvariables.cliente : CCliente(idUsuario: myvariables.cliente.idUsuario, idcliente: myvariables.cliente.idCliente, user: telefonoContactar!, nombre: nombreContactar!, email: myvariables.cliente.email, empresa: myvariables.cliente.empresa)
-        
-        mapaVista.removeAnnotations(mapaVista.annotations)
-        let nuevaSolicitud = CSolicitud()
-        
-        nuevaSolicitud.DatosCliente(cliente: clienteSolicitud!)
-        
-        nuevaSolicitud.DatosSolicitud(dirorigen: origen, referenciaorigen: referencia, dirdestino: destino,latorigen: String(Double(origenAnotacion.coordinate.latitude)), lngorigen: String(Double(origenAnotacion.coordinate.longitude)), latdestino: "0", lngdestino: "0",FechaHora: "")
-        
-        if self.VoucherView.isHidden == false && self.VoucherCheck.isOn{
-          voucher = "1"
-        }
-        
-        if self.RecordarView.isHidden == false && self.RecordarSwitch.isOn{
-          let newFavorita = [self.origenText.text, referenciaText.text]
-          self.GuardarFavorita(newFavorita: newFavorita as! [String])
-        }
-        
-        self.CrearSolicitud(nuevaSolicitud,voucher: voucher)
-        DibujarIconos([self.origenAnotacion])
-        view.endEditing(true)
-      }else{
-        
-      }
     }
+    
+    
+//    if !self.origenCell.destinoText.isHidden && self.origenCell.destinoText.text!.isEmpty{
+//      let alertaDos = UIAlertController (title: "Dirección de Destino", message: "Si desea pagar con Voucher necesita escribir su dirección de Destino.", preferredStyle: UIAlertController.Style.alert)
+//      alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
+//        self.origenCell.destinoText.becomeFirstResponder()
+//      }))
+//      self.present(alertaDos, animated: true, completion: nil)
+//    }else{
+//      if !(self.origenCell.origenText.text?.isEmpty)! {
+//        var voucher = "0"
+//        let origen = self.cleanTextField(textfield: self.origenCell.origenText)
+//
+//        let referencia = self.cleanTextField(textfield: self.origenCell.referenciaText)
+//
+//        let destino = self.cleanTextField(textfield: self.origenCell.destinoText)
+//
+//        let nombreContactar = self.contactoCell.contactoNameText.text!.isEmpty ? GlobalVariables.cliente.nombreApellidos : self.cleanTextField(textfield: self.contactoCell.contactoNameText)
+//
+//        let telefonoContactar = self.contactoCell.telefonoText.text!.isEmpty ? GlobalVariables.cliente.user : self.cleanTextField(textfield: self.contactoCell.telefonoText)
+//
+//        let clienteSolicitud = self.contactoCell.contactoNameText.text!.isEmpty ? GlobalVariables.cliente : CCliente(idUsuario: GlobalVariables.cliente.idUsuario, idcliente: GlobalVariables.cliente.idCliente, user: telefonoContactar!, nombre: nombreContactar!, email: GlobalVariables.cliente.email, empresa: GlobalVariables.cliente.empresa)
+//
+//        mapaVista.removeAnnotations(mapaVista.annotations)
+//        let nuevaSolicitud = CSolicitud()
+//
+//        nuevaSolicitud.DatosCliente(cliente: clienteSolicitud!)
+//
+//        nuevaSolicitud.DatosSolicitud(dirorigen: origen, referenciaorigen: referencia, dirdestino: destino,latorigen: String(Double(origenAnotacion.coordinate.latitude)), lngorigen: String(Double(origenAnotacion.coordinate.longitude)), latdestino: "0", lngdestino: "0",FechaHora: "")
+//
+//        //        if self.voucherCell.voucherSwitch.isOn{
+//        //          voucher = "1"
+//        //        }
+//
+//        self.CrearSolicitud(nuevaSolicitud,voucher: voucher)
+//        DibujarIconos([self.origenAnotacion])
+//        view.endEditing(true)
+//      }else{
+//
+//      }
+//    }
   }
   
+  func updateOfertaValue(value: Double){
+    self.newOfertaText.text = "\((self.newOfertaText.text! as NSString).doubleValue + value)"
+  }
   //MARK:- CONTROL DE TECLADO VIRTUAL
   //Funciones para mover los elementos para que no queden detrás del teclado
   
@@ -725,57 +779,61 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   }
   
   override func viewWillDisappear(_ animated: Bool) {
-    self.referenciaText.resignFirstResponder()
+    self.origenCell.referenciaText.resignFirstResponder()
   }
   
   @objc func ocultarTeclado(sender: UITapGestureRecognizer){
     //sender.cancelsTouchesInView = false
-    //self.SolicitudView.endEditing(true)
+    self.SolicitudView.endEditing(true)
   }
   
-  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-    if touch.view?.isDescendant(of: self.TablaDirecciones) == true {
-      gestureRecognizer.cancelsTouchesInView = false
-    }else{
-      self.SolicitudView.endEditing(true)
-    }
-    return true
-  }
-  
+  //  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+  //    if touch.view?.isDescendant(of: self.TablaDirecciones) == true {
+  //      gestureRecognizer.cancelsTouchesInView = false
+  //    }else{
+  //      self.SolicitudView.endEditing(true)
+  //    }
+  //    return true
+  //  }
+  //
   func cleanTextField(textfield: UITextField)->String{
     var cleanedTextField = textfield.text?.uppercased()
     cleanedTextField = cleanedTextField!.replacingOccurrences(of: "Ñ", with: "N",options: .regularExpression, range: nil)
     cleanedTextField = cleanedTextField!.replacingOccurrences(of: "[,.]", with: "-",options: .regularExpression, range: nil)
-    cleanedTextField = cleanedTextField!.replacingOccurrences(of: "[\n]", with: " ",options: .regularExpression, range: nil)
+    cleanedTextField = cleanedTextField!.replacingOccurrences(of: "[\n]", with: "-",options: .regularExpression, range: nil)
     cleanedTextField = cleanedTextField!.replacingOccurrences(of: "[#]", with: "No",options: .regularExpression, range: nil)
     return cleanedTextField!.folding(options: .diacriticInsensitive, locale: .current)
   }
   
-  func showFormularioSolicitud(){
-    self.CargarFavoritas()
-    self.TablaDirecciones.reloadData()
-    self.origenIcono.isHidden = true
-    self.origenAnotacion.coordinate = mapaVista.centerCoordinate
-    coreLocationManager.stopUpdatingLocation()
-    self.SolicitarBtn.isHidden = true
-    self.origenText.becomeFirstResponder()
-    if myvariables.cliente.empresa != "null"{
-      self.VoucherView.isHidden = false
-      self.VoucherEmpresaName.text = myvariables.cliente.empresa
-      NSLayoutConstraint(item: self.BtnsView, attribute: .top, relatedBy: .equal, toItem: self.VoucherView, attribute:.bottom, multiplier: 1.0, constant:43.0).isActive = true
-    }else{
-      NSLayoutConstraint(item: self.BtnsView, attribute: .top, relatedBy: .equal, toItem: self.ContactoView, attribute:.bottom, multiplier: 1.0, constant:10.0).isActive = true
-      
-    }
-    self.formularioSolicitud.isHidden = false
+  //  func showFormularioSolicitud(){
+  //    self.CargarFavoritas()
+  //    self.TablaDirecciones.reloadData()
+  //    self.origenIcono.isHidden = true
+  //    self.origenAnotacion.coordinate = mapaVista.centerCoordinate
+  //    coreLocationManager.stopUpdatingLocation()
+  //    self.SolicitarBtn.isHidden = true
+  //    self.origenCell.origenText.becomeFirstResponder()
+  //    if GlobalVariables.cliente.empresa != "null"{
+  //      self.VoucherView.isHidden = false
+  //      self.VoucherEmpresaName.text = GlobalVariables.cliente.empresa
+  //      NSLayoutConstraint(item: self.BtnsView, attribute: .top, relatedBy: .equal, toItem: self.VoucherView, attribute:.bottom, multiplier: 1.0, constant:43.0).isActive = true
+  //    }else{
+  //      NSLayoutConstraint(item: self.BtnsView, attribute: .top, relatedBy: .equal, toItem: self.ContactoView, attribute:.bottom, multiplier: 1.0, constant:10.0).isActive = true
+  //
+  //    }
+  //    self.formularioSolicitud.isHidden = false
+  //  }
+  
+  //Date picker functions
+  //  @objc func dateChange( datePicker: UIDatePicker) {
+  //    let dateFormatter = DateFormatter()
+  //    dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
+  //    //self.reservaDate.text = dateFormatter.string(from: datePicker.date)
+  //  }
+  //
+  @objc func dismissPicker() {
+    view.endEditing(true)
   }
-  
-  
-  
-  
-  
-  
-  
   
   //MARK:- BOTONES GRAFICOS ACCIONES
   @IBAction func MostrarMenu(_ sender: Any) {
@@ -793,7 +851,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
       try fileAudio.removeItem(atPath: AudioPath)
     }catch{
     }
-    let datos = "#SocketClose," + myvariables.cliente.idCliente + ",# \n"
+    let datos = "#SocketClose," + GlobalVariables.cliente.idCliente + ",# \n"
     EnviarSocket(datos)
     exit(3)
   }
@@ -807,128 +865,132 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   //SOLICITAR BUTTON
   @IBAction func Solicitar(_ sender: AnyObject) {
     //TRAMA OUT: #Posicion,idCliente,latorig,lngorig
-    self.addEnvirSolictudBtn()
-    let datos = "#Posicion," + myvariables.cliente.idCliente + "," + "\(self.origenAnotacion.coordinate.latitude)," + "\(self.origenAnotacion.coordinate.longitude)," + "# \n"
-    EnviarSocket(datos)
-    
+    if self.tipoTransporte != ""{
+      self.addEnvirSolictudBtn()
+      self.origenAnotacion.coordinate = self.miposicion.coordinate
+      let datos = "#Posicion,\(GlobalVariables.cliente.idCliente!),\(self.origenAnotacion.coordinate.latitude),\(self.origenAnotacion.coordinate.longitude),\(self.transporteIndex!),# \n"
+      self.EnviarTimer(estado: 1, datos: datos)
+    }else{
+      self.showTransporteMenu()
+    }
   }
   
   //Voucher check
   @IBAction func SwicthVoucher(_ sender: Any) {
-    if self.VoucherCheck.isOn{
-      self.destinoText.isHidden = false
-      self.destinoText.becomeFirstResponder()
+    if self.voucherCell.voucherSwitch.isOn{
+      self.origenCell.destinoText.isHidden = false
+      self.origenCell.destinoText.becomeFirstResponder()
     }else{
-      self.destinoText.isHidden = true
-      self.destinoText.resignFirstResponder()
+      self.origenCell.destinoText.isHidden = true
+      self.origenCell.destinoText.resignFirstResponder()
     }
   }
   
   //Aceptar y Enviar solicitud desde formulario solicitud
   @IBAction func AceptarSolicitud(_ sender: AnyObject) {
     
-    if !self.destinoText.isHidden && self.destinoText.text!.isEmpty{
-      let alertaDos = UIAlertController (title: "Dirección de Destino", message: "Si desea pagar con Voucher necesita escribir su dirección de Destino.", preferredStyle: UIAlertController.Style.alert)
-      alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
-        self.destinoText.becomeFirstResponder()
-      }))
-      self.present(alertaDos, animated: true, completion: nil)
-    }else{
-      if !(self.origenText.text?.isEmpty)! {
-        var voucher = "0"
-        let origen = self.cleanTextField(textfield: self.origenText)
-        
-        let referencia = self.cleanTextField(textfield: self.referenciaText)
-        
-        let destino = self.cleanTextField(textfield: self.destinoText)
-        
-        let nombreContactar = self.NombreContactoText.text!.isEmpty ? myvariables.cliente.nombreApellidos : self.cleanTextField(textfield: self.NombreContactoText)
-        
-        let telefonoContactar = self.TelefonoContactoText.text!.isEmpty ? myvariables.cliente.user : self.cleanTextField(textfield: self.TelefonoContactoText)
-        
-        let clienteSolicitud = self.NombreContactoText.text!.isEmpty ? myvariables.cliente : CCliente(idUsuario: myvariables.cliente.idUsuario, idcliente: myvariables.cliente.idCliente, user: telefonoContactar!, nombre: nombreContactar!, email: myvariables.cliente.email, empresa: myvariables.cliente.empresa)
-        
-        mapaVista.removeAnnotations(mapaVista.annotations)
-        let nuevaSolicitud = CSolicitud()
-        
-        nuevaSolicitud.DatosCliente(cliente: clienteSolicitud!)
-        
-        nuevaSolicitud.DatosSolicitud(dirorigen: origen, referenciaorigen: referencia, dirdestino: destino,latorigen: String(Double(origenAnotacion.coordinate.latitude)), lngorigen: String(Double(origenAnotacion.coordinate.longitude)), latdestino: "0", lngdestino: "0",FechaHora: "")
-        
-        if self.VoucherView.isHidden == false && self.VoucherCheck.isOn{
-          voucher = "1"
-        }
-        
-        if self.RecordarView.isHidden == false && self.RecordarSwitch.isOn{
-          let newFavorita = [self.origenText.text, referenciaText.text]
-          self.GuardarFavorita(newFavorita: newFavorita as! [String])
-        }
-        
-        self.CrearSolicitud(nuevaSolicitud,voucher: voucher)
-        DibujarIconos([self.origenAnotacion])
-        view.endEditing(true)
-      }else{
-        
-      }
-    }
-    //        if !(self.NombreContactoText.text?.isEmpty)! && (self.TelefonoContactoText.text?.isEmpty)!{
-    //            let alertaDos = UIAlertController (title: "Contactar a otra persona", message: "Debe teclear el número de teléfono de la persona que el conductor debe contactar.", preferredStyle: .alert)
-    //            alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
-    //
-    //            }))
-    //            self.present(alertaDos, animated: true, completion: nil)
-    //        }else{
-    //            if (!(self.origenText.text?.isEmpty)! && self.TelefonoContactoText.text != "Escriba el nombre del contacto" && self.TelefonoContactoText.text != "Número de teléfono incorrecto"){
-    //                var voucher = "0"
-    //                var recordar = "0"
-    //                var origen = self.origenText.text!.uppercased()
-    //                origen = origen.replacingOccurrences(of: "Ñ", with: "N",options: .regularExpression, range: nil)
-    //                origen = origen.replacingOccurrences(of: "[,.]", with: "-",options: .regularExpression, range: nil)
-    //                origen = origen.replacingOccurrences(of: "[\n]", with: " ",options: .regularExpression, range: nil)
-    //                origen = origen.replacingOccurrences(of: "[#]", with: "No",options: .regularExpression, range: nil)
-    //                origen = origen.folding(options: .diacriticInsensitive, locale: .current)
-    //
-    //                self.referenciaText.endEditing(true)
-    //                var referencia = self.referenciaText.text!.uppercased()
-    //                referencia = referencia.replacingOccurrences(of: "Ñ", with: "N",options: .regularExpression, range: nil)
-    //                referencia = referencia.replacingOccurrences(of: "[,.]", with: "-",options: .regularExpression, range: nil)
-    //                referencia = referencia.replacingOccurrences(of: "[\n]", with: " ",options: .regularExpression, range: nil)
-    //                referencia = referencia.replacingOccurrences(of: "[#]", with: "No",options: .regularExpression, range: nil)
-    //                referencia = referencia.folding(options: .diacriticInsensitive, locale: .current)
-    //
-    //                mapaVista.removeAnnotations(self.mapaVista.annotations)
-    //                let nuevaSolicitud = CSolicitud()
-    //                if !(NombreContactoText.text?.isEmpty)!{
-    //                    nuevaSolicitud.DatosOtroCliente(clienteId: myvariables.cliente.idCliente, telefono: self.TelefonoContactoText.text!, nombre: self.NombreContactoText.text!)
-    //                }else{
-    //                    nuevaSolicitud.DatosCliente(cliente: myvariables.cliente)
-    //                }
-    //                nuevaSolicitud.DatosSolicitud(dirorigen: origen, referenciaorigen: referencia, dirdestino: "null", latorigen: String(Double(origenAnotacion.coordinate.latitude)), lngorigen: String(Double(origenAnotacion.coordinate.longitude)), latdestino: "0.0", lngdestino: "0.0",FechaHora: "null")
-    //                if self.VoucherView.isHidden == false && self.VoucherCheck.isOn{
-    //                    voucher = "1"
-    //                }
-    //                if self.RecordarView.isHidden == false && self.RecordarSwitch.isOn{
-    //                    let newFavorita = [self.origenText.text, referenciaText.text]
-    //                    self.GuardarFavorita(newFavorita: newFavorita as! [String])
-    //                }
-    //                self.CrearSolicitud(nuevaSolicitud,voucher: voucher)
-    //                self.RecordarView.isHidden = true
-    //                //self.CancelarSolicitudProceso.isHidden = false
-    //            }else{
-    //
-    //            }
-    //        }
+//    if !self.origenCell.destinoText.isHidden && self.origenCell.destinoText.text!.isEmpty{
+//      let alertaDos = UIAlertController (title: "Dirección de Destino", message: "Si desea pagar con Voucher necesita escribir su dirección de Destino.", preferredStyle: UIAlertController.Style.alert)
+//      alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
+//        self.origenCell.destinoText.becomeFirstResponder()
+//      }))
+//      self.present(alertaDos, animated: true, completion: nil)
+//    }else{
+//      if !(self.origenCell.origenText.text?.isEmpty)! {
+//        var voucher = "0"
+//        let origen = self.cleanTextField(textfield: self.origenCell.origenText)
+//        
+//        let referencia = self.cleanTextField(textfield: self.origenCell.referenciaText)
+//        
+//        let destino = self.cleanTextField(textfield: self.origenCell.destinoText)
+//        
+//        let nombreContactar = self.contactoCell.contactoNameText.text!.isEmpty ? GlobalVariables.cliente.nombreApellidos : self.cleanTextField(textfield: self.contactoCell.contactoNameText!)
+//        
+//        let telefonoContactar = self.contactoCell.telefonoText.text!.isEmpty ? GlobalVariables.cliente.user : self.cleanTextField(textfield: self.contactoCell.telefonoText!)
+//        
+//        let clienteSolicitud = self.contactoCell.contactoNameText.text!.isEmpty ? GlobalVariables.cliente : CCliente(idUsuario: GlobalVariables.cliente.idUsuario, idcliente: GlobalVariables.cliente.idCliente, user: telefonoContactar!, nombre: nombreContactar!, email: GlobalVariables.cliente.email, empresa: GlobalVariables.cliente.empresa)
+//        
+//        mapaVista.removeAnnotations(mapaVista.annotations)
+//        let nuevaSolicitud = CSolicitud()
+//        
+//        nuevaSolicitud.DatosCliente(cliente: clienteSolicitud!)
+//        
+//        nuevaSolicitud.DatosSolicitud(dirorigen: origen, referenciaorigen: referencia, dirdestino: destino,latorigen: String(Double(origenAnotacion.coordinate.latitude)), lngorigen: String(Double(origenAnotacion.coordinate.longitude)), latdestino: "0", lngdestino: "0",FechaHora: "")
+//        
+//        if self.voucherCell.voucherSwitch.isOn{
+//          voucher = "1"
+//        }
+//        
+//        //        if self.RecordarView.isHidden == false && self.RecordarSwitch.isOn{
+//        //          let newFavorita = [self.origenCell.origenText.text, referenciaText.text]
+//        //          self.GuardarFavorita(newFavorita: newFavorita as! [String])
+//        //        }
+//        
+//        self.CrearSolicitud(nuevaSolicitud,voucher: voucher)
+//        DibujarIconos([self.origenAnotacion])
+//        view.endEditing(true)
+//      }else{
+//        
+//      }
+//    }
+//    //        if !(self.contactoCell.contactoNameText.text?.isEmpty)! && (self.TelefonoContactoText.text?.isEmpty)!{
+//    //            let alertaDos = UIAlertController (title: "Contactar a otra persona", message: "Debe teclear el número de teléfono de la persona que el conductor debe contactar.", preferredStyle: .alert)
+//    //            alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
+//    //
+//    //            }))
+//    //            self.present(alertaDos, animated: true, completion: nil)
+//    //        }else{
+//    //            if (!(self.origenCell.origenText.text?.isEmpty)! && self.TelefonoContactoText.text != "Escriba el nombre del contacto" && self.TelefonoContactoText.text != "Número de teléfono incorrecto"){
+//    //                var voucher = "0"
+//    //                var recordar = "0"
+//    //                var origen = self.origenCell.origenText.text!.uppercased()
+//    //                origen = origen.replacingOccurrences(of: "Ñ", with: "N",options: .regularExpression, range: nil)
+//    //                origen = origen.replacingOccurrences(of: "[,.]", with: "-",options: .regularExpression, range: nil)
+//    //                origen = origen.replacingOccurrences(of: "[\n]", with: " ",options: .regularExpression, range: nil)
+//    //                origen = origen.replacingOccurrences(of: "[#]", with: "No",options: .regularExpression, range: nil)
+//    //                origen = origen.folding(options: .diacriticInsensitive, locale: .current)
+//    //
+//    //                self.origenCell.referenciaText.endEditing(true)
+//    //                var referencia = self.origenCell.referenciaText.text!.uppercased()
+//    //                referencia = referencia.replacingOccurrences(of: "Ñ", with: "N",options: .regularExpression, range: nil)
+//    //                referencia = referencia.replacingOccurrences(of: "[,.]", with: "-",options: .regularExpression, range: nil)
+//    //                referencia = referencia.replacingOccurrences(of: "[\n]", with: " ",options: .regularExpression, range: nil)
+//    //                referencia = referencia.replacingOccurrences(of: "[#]", with: "No",options: .regularExpression, range: nil)
+//    //                referencia = referencia.folding(options: .diacriticInsensitive, locale: .current)
+//    //
+//    //                mapaVista.removeAnnotations(self.mapaVista.annotations)
+//    //                let nuevaSolicitud = CSolicitud()
+//    //                if !(NombreContactoText.text?.isEmpty)!{
+//    //                    nuevaSolicitud.DatosOtroCliente(clienteId: GlobalVariables.cliente.idCliente, telefono: self.TelefonoContactoText.text!, nombre: self.contactoCell.contactoNameText.text!)
+//    //                }else{
+//    //                    nuevaSolicitud.DatosCliente(cliente: GlobalVariables.cliente)
+//    //                }
+//    //                nuevaSolicitud.DatosSolicitud(dirorigen: origen, referenciaorigen: referencia, dirdestino: "null", latorigen: String(Double(origenAnotacion.coordinate.latitude)), lngorigen: String(Double(origenAnotacion.coordinate.longitude)), latdestino: "0.0", lngdestino: "0.0",FechaHora: "null")
+//    //                if self.VoucherView.isHidden == false && self.VoucherCheck.isOn{
+//    //                    voucher = "1"
+//    //                }
+//    //                if self.RecordarView.isHidden == false && self.RecordarSwitch.isOn{
+//    //                    let newFavorita = [self.origenCell.origenText.text, referenciaText.text]
+//    //                    self.GuardarFavorita(newFavorita: newFavorita as! [String])
+//    //                }
+//    //                self.CrearSolicitud(nuevaSolicitud,voucher: voucher)
+//    //                self.RecordarView.isHidden = true
+//    //                //self.CancelarSolicitudProceso.isHidden = false
+//    //            }else{
+//    //
+//    //            }
+//    //        }
   }
   
   //Boton para Cancelar Carrera
   @IBAction func CancelarSol(_ sender: UIButton) {
     self.formularioSolicitud.isHidden = true
-    self.referenciaText.endEditing(true)
+    self.origenCell.referenciaText.endEditing(true)
     self.Inicio()
-    self.origenText.text?.removeAll()
-    self.RecordarView.isHidden = true
-    self.RecordarSwitch.isOn = false
-    self.referenciaText.text?.removeAll()
+    self.origenCell.origenText.text?.removeAll()
+    //    self.RecordarView.isHidden = true
+    //    self.RecordarSwitch.isOn = false
+    self.origenCell.referenciaText.text?.removeAll()
     self.SolicitarBtn.isHidden = false
   }
   
@@ -941,17 +1003,17 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     self.SolPendientesView.isHidden = true
     DispatchQueue.main.async {
       let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "CallCenter") as! CallCenterController
-      vc.telefonosCallCenter = self.TelefonosCallCenter
+      vc.telefonosCallCenter = GlobalVariables.TelefonosCallCenter
       self.navigationController?.show(vc, sender: nil)
     }
     
   }
   
   @IBAction func MostrarSolPendientes(_ sender: AnyObject) {
-    if myvariables.solpendientes.count > 0{
+    if GlobalVariables.solpendientes.count > 0{
       DispatchQueue.main.async {
         let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ListaSolPdtes") as! SolicitudesTableController
-        vc.solicitudesMostrar = myvariables.solpendientes
+        vc.solicitudesMostrar = GlobalVariables.solpendientes
         self.navigationController?.show(vc, sender: nil)
       }
     }else{
@@ -963,6 +1025,25 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     Inicio()
   }
   
+  @IBAction func closeSolicitudForm(_ sender: Any) {
+    Inicio()
+  }
+  
+  @IBAction func downOferta(_ sender: Any) {
+    self.updateOfertaValue(value: -0.25)
+    self.down25.isEnabled = ((self.newOfertaText!.text! as NSString).doubleValue > (self.origenCell.ofertaText.text! as NSString).doubleValue)
+  }
+  
+  @IBAction func upOferta(_ sender: Any) {
+    self.down25.isEnabled = true
+    self.updateOfertaValue(value: +0.25)
+  }
+  @IBAction func enviarNuevoValorOferta(_ sender: Any) {
+    //#RSO,idsolicitud,idcliente,nuevovaloroferta,#
+    let datos = "#RSO,\(self.solicitudInProcess.text!),\(GlobalVariables.cliente.idCliente!),\(self.newOfertaText.text!),# \n"
+    print(datos)
+    self.EnviarSocket(datos)
+  }
 }
 
 

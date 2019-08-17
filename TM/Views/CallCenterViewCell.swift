@@ -9,19 +9,22 @@
 import UIKit
 
 class CallCenterViewCell: UITableViewCell {
-
-    @IBOutlet weak var ImagenOperadora: UIImageView!
-    @IBOutlet weak var NumeroTelefono: UILabel!
+  
+  @IBOutlet weak var ImagenOperadora: UIImageView!
+  @IBOutlet weak var NumeroTelefono: UILabel!
+  @IBOutlet weak var elementsView: UIView!
+  
+  
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    self.elementsView.addShadow()
+    // Initialization code
+  }
+  
+  override func setSelected(_ selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
+    // Configure the view for the selected state
+  }
+  
 }

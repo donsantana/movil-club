@@ -66,8 +66,8 @@ class CompletadaController: UIViewController, UITextViewDelegate {
     //FUNCIÓN ENVIAR AL SOCKET
     func EnviarSocket(_ datos: String){
         if CConexionInternet.isConnectedToNetwork() == true{
-            if myvariables.socket.status.active{
-                myvariables.socket.emit("data", datos)
+            if GlobalVariables.socket.status.active{
+                GlobalVariables.socket.emit("data", datos)
             }else{
                 let alertaDos = UIAlertController (title: "Sin Conexión", message: "No se puede conectar al servidor por favor intentar otra vez.", preferredStyle: UIAlertController.Style.alert)
                 alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in

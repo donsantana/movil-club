@@ -13,14 +13,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="VoucherViewCell" customModule="TM_temp_caseinsensitive_rename" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jxd-pj-7Tg">
                     <rect key="frame" x="20" y="0.0" width="374" height="52"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="¿Desea pagar con voucher?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rIz-S6-qqR">
-                            <rect key="frame" x="15" y="5" width="349" height="20"/>
+                            <rect key="frame" x="25" y="5" width="339" height="20"/>
                             <constraints>
                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="20" id="muX-rK-gCz"/>
                                 <constraint firstAttribute="height" constant="20" id="tsD-mL-UWI"/>
@@ -30,17 +30,17 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <switch contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sb6-oP-Ojn">
-                            <rect key="frame" x="15" y="31" width="51" height="31"/>
+                            <rect key="frame" x="25" y="31" width="51" height="31"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="31" id="EPZ-CY-ba9"/>
                                 <constraint firstAttribute="width" constant="49" id="X5Z-CE-lDM"/>
                                 <constraint firstAttribute="width" secondItem="sb6-oP-Ojn" secondAttribute="height" multiplier="49:31" id="nAF-wJ-Toz"/>
                             </constraints>
                         </switch>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="NOMBRE DE LA EMPRESA" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YTq-2I-wgT">
-                            <rect key="frame" x="67" y="35" width="307" height="16"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NOMBRE DE LA EMPRESA" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YTq-2I-wgT">
+                            <rect key="frame" x="82" y="35" width="292" height="16"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="YTq-2I-wgT" secondAttribute="height" multiplier="161:15" constant="135.26666666666668" id="Yk4-9b-b0q"/>
+                                <constraint firstAttribute="width" secondItem="YTq-2I-wgT" secondAttribute="height" multiplier="161:15" constant="120.26666666666668" id="Yk4-9b-b0q"/>
                             </constraints>
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                             <nil key="textColor"/>
@@ -50,12 +50,12 @@
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="rIz-S6-qqR" secondAttribute="trailing" constant="10" id="3w1-Fa-SUJ"/>
                         <constraint firstItem="sb6-oP-Ojn" firstAttribute="top" secondItem="Jxd-pj-7Tg" secondAttribute="centerY" constant="5" id="HvW-JN-Mmb"/>
-                        <constraint firstItem="YTq-2I-wgT" firstAttribute="leading" secondItem="sb6-oP-Ojn" secondAttribute="trailing" constant="3" id="Zbq-z5-AhH"/>
+                        <constraint firstItem="YTq-2I-wgT" firstAttribute="leading" secondItem="sb6-oP-Ojn" secondAttribute="trailing" constant="8" id="Zbq-z5-AhH"/>
                         <constraint firstItem="rIz-S6-qqR" firstAttribute="top" secondItem="Jxd-pj-7Tg" secondAttribute="top" constant="5" id="k0p-UE-a8b"/>
-                        <constraint firstItem="rIz-S6-qqR" firstAttribute="leading" secondItem="Jxd-pj-7Tg" secondAttribute="leading" constant="15" id="oD1-eV-OnD"/>
+                        <constraint firstItem="rIz-S6-qqR" firstAttribute="leading" secondItem="Jxd-pj-7Tg" secondAttribute="leading" constant="25" id="oD1-eV-OnD"/>
                         <constraint firstItem="sb6-oP-Ojn" firstAttribute="leading" secondItem="rIz-S6-qqR" secondAttribute="leading" id="r3T-z7-tLo"/>
                         <constraint firstAttribute="height" constant="52" id="rrP-gO-0Kc"/>
-                        <constraint firstItem="YTq-2I-wgT" firstAttribute="centerY" secondItem="sb6-oP-Ojn" secondAttribute="centerY" id="zJi-Yu-DUB"/>
+                        <constraint firstItem="YTq-2I-wgT" firstAttribute="centerY" secondItem="sb6-oP-Ojn" secondAttribute="centerY" constant="-3.5" id="zJi-Yu-DUB"/>
                     </constraints>
                 </view>
             </subviews>
@@ -71,7 +71,7 @@
                 <outlet property="empresaText" destination="YTq-2I-wgT" id="V5O-Ni-s1L"/>
                 <outlet property="voucherSwitch" destination="sb6-oP-Ojn" id="dsW-bB-bSX"/>
             </connections>
-            <point key="canvasLocation" x="137.68115942028987" y="-123.88392857142857"/>
+            <point key="canvasLocation" x="137.68115942028987" y="-126.5625"/>
         </view>
     </objects>
 </document>

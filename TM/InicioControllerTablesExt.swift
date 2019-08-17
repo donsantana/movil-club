@@ -13,7 +13,7 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
   func numberOfSections(in tableView: UITableView) -> Int {
     // #warning Incomplete implementation, return the number of sections
     if tableView.isEqual(solicitudFormTable){
-      return myvariables.cliente.empresa != nil ? 3 : 2
+      return GlobalVariables.cliente.empresa != nil ? 3 : 2
     }else{
       return 1
     }
@@ -22,8 +22,8 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of rows
     switch tableView {
-    case self.TablaDirecciones:
-      return self.DireccionesArray.count
+//    case self.TablaDirecciones:
+//      return self.DireccionesArray.count
     case self.MenuTable:
       return self.MenuArray.count
     default:
@@ -34,10 +34,10 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     switch tableView {
-    case self.TablaDirecciones:
-      let cell = tableView.dequeueReusableCell(withIdentifier: "CELL", for: indexPath)
-      cell.textLabel?.text = self.DireccionesArray[indexPath.row][0]
-      return cell
+//    case self.TablaDirecciones:
+//      let cell = tableView.dequeueReusableCell(withIdentifier: "CELL", for: indexPath)
+//      cell.textLabel?.text = self.DireccionesArray[indexPath.row][0]
+//      return cell
     case self.MenuTable:
       let cell = tableView.dequeueReusableCell(withIdentifier: "MENUCELL", for: indexPath)
       cell.textLabel?.text = self.MenuArray[indexPath.row].title
@@ -46,11 +46,12 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
     default:
       switch indexPath.section {
       case 0:
-        return Bundle.main.loadNibNamed("OrigenCell", owner: self, options: nil)?.first as! OrigenViewCell
+        self.origenCell.initContent()
+        return self.origenCell//Bundle.main.loadNibNamed("OrigenCell", owner: self, options: nil)?.first as! OrigenViewCell
       case 1:
-        return tableView.numberOfSections == 3 ? Bundle.main.loadNibNamed("VoucherCell", owner: self, options: nil)?.first as! VoucherViewCell : Bundle.main.loadNibNamed("ContactoCell", owner: self, options: nil)?.first as! ContactoViewCell
+        return tableView.numberOfSections == 3 ? self.voucherCell : self.contactoCell
       default:
-        return Bundle.main.loadNibNamed("ContactoCell", owner: self, options: nil)?.first as! ContactoViewCell
+        return self.contactoCell
       }
     }
 //    if tableView.isEqual(self.TablaDirecciones){
@@ -64,36 +65,33 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    if tableView.isEqual(self.TablaDirecciones){
-      self.origenText.text = self.DireccionesArray[indexPath.row][0]
-      self.TablaDirecciones.isHidden = true
-      self.referenciaText.text = self.DireccionesArray[indexPath.row][1]
-      self.origenText.resignFirstResponder()
-    }else{
+//    if tableView.isEqual(self.TablaDirecciones){
+//      self.origenCell.origenText.text = self.DireccionesArray[indexPath.row][0]
+//      self.TablaDirecciones.isHidden = true
+//      self.origenCell.referenciaText.text = self.DireccionesArray[indexPath.row][1]
+//      self.origenCell.origenText.resignFirstResponder()
+//    }else{
       self.MenuView1.isHidden = true
       self.TransparenciaView.isHidden = true
       tableView.deselectRow(at: indexPath, animated: false)
       switch tableView.cellForRow(at: indexPath)?.textLabel?.text{
-      case "En proceso"?:
-        if myvariables.solpendientes.count > 0{
-          let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ListaSolPdtes") as! SolicitudesTableController
-          vc.solicitudesMostrar = myvariables.solpendientes
-          self.navigationController?.show(vc, sender: nil)
+      case "Solicitudes en proceso"?:
+        if GlobalVariables.solpendientes.count > 0{
+          let vc = R.storyboard.main.listaSolPdtes()
+          vc!.solicitudesMostrar = GlobalVariables.solpendientes
+          self.navigationController?.show(vc!, sender: nil)
         }else{
           self.SolPendientesView.isHidden = false
         }
       case "Operadora"?:
         let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "CallCenter") as! CallCenterController
-        vc.telefonosCallCenter = self.TelefonosCallCenter
+        vc.telefonosCallCenter = GlobalVariables.TelefonosCallCenter
         self.navigationController?.show(vc, sender: nil)
       case "Perfil"?:
         let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "Perfil") as! PerfilController
         self.navigationController?.show(vc, sender: nil)
       case "Tipo de Transporte"?:
-        let vc = R.storyboard.main.transpMenuView()
-        let navController = UINavigationController(rootViewController: vc!)
-        let appdelegate = UIApplication.shared.delegate as! AppDelegate
-        appdelegate.window!.rootViewController = navController
+        self.showTransporteMenu()
         
       case "Compartir app"?:
         if let name = URL(string: GlobalConstants.itunesURL) {
@@ -114,21 +112,21 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
         //                }catch{
         //
         //                }
-        myvariables.userDefaults.set(nil, forKey: "\(Customization.nameShowed)-loginData")
+        GlobalVariables.userDefaults.set(nil, forKey: "\(Customization.nameShowed)-loginData")
         self.CloseAPP()
       default:
         print("nada")
       }
-    }
+    //}
   }
   
   //FUNCIONES Y EVENTOS PARA ELIMIMAR CELLS, SE NECESITA AGREGAR UITABLEVIEWDATASOURCE
   func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-    if tableView.isEqual(self.TablaDirecciones){
-      return true
-    }else{
+//    if tableView.isEqual(self.TablaDirecciones){
+//      return true
+//    }else{
       return false
-    }
+//    }
   }
   
   func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
@@ -136,14 +134,14 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
   }
   
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-    if editingStyle == UITableViewCell.EditingStyle.delete {
-      self.EliminarFavorita(posFavorita: indexPath.row)
-      tableView.deleteRows(at: [indexPath as IndexPath], with: UITableView.RowAnimation.automatic)
-      if self.DireccionesArray.count == 0{
-        self.TablaDirecciones.isHidden = true
-      }
-      tableView.reloadData()
-    }
+//    if editingStyle == UITableViewCell.EditingStyle.delete {
+//      self.EliminarFavorita(posFavorita: indexPath.row)
+//      tableView.deleteRows(at: [indexPath as IndexPath], with: UITableView.RowAnimation.automatic)
+//      if self.DireccionesArray.count == 0{
+//        self.TablaDirecciones.isHidden = true
+//      }
+//      tableView.reloadData()
+//    }
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -153,9 +151,9 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
     case self.solicitudFormTable:
       switch indexPath.section {
       case 0:
-        return 220
+        return 295
       default:
-        return 85
+        return 75
       }
     default:
       return 44

@@ -105,7 +105,7 @@ extension LoginController: UITextFieldDelegate{
 //            } catch {
 //
 //            }
-            myvariables.userDefaults.set(loginData, forKey: "\(Customization.nameShowed)-loginData")
+            GlobalVariables.userDefaults.set(loginData, forKey: "\(Customization.nameShowed)-loginData")
             self.Login(loginData: loginData)
         }
         return true
@@ -124,7 +124,6 @@ extension LoginController: ApiRequestDelegate{
     }
     
     func apiRequest(_ controller: ApiRequestController, getServerData serverData: String) {
-        print("server \(serverData)")
         Customization.serverData = "http://\(serverData)"
         self.connectToSocket()
     }

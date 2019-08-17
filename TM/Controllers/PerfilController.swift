@@ -33,17 +33,17 @@ class PerfilController: UIViewController {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = UIColor.black
         
-        let readString = myvariables.userDefaults.string(forKey: "\(Customization.nameShowed)-loginData") ?? ""
+        let readString = GlobalVariables.userDefaults.string(forKey: "\(Customization.nameShowed)-loginData") ?? ""
         
         self.login = String(readString).components(separatedBy: ",")
         
         self.ClaveActual = login[2]
         
-        self.NombreApellidoText.text = myvariables.cliente.nombreApellidos
+        self.NombreApellidoText.text = GlobalVariables.cliente.nombreApellidos
         //MASK: - PARA MOSTRAR Y OCULTAR EL TECLADO
         //NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardNotification), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
         
-        myvariables.socket.on("UpdateUser"){data, ack in
+        GlobalVariables.socket.on("UpdateUser"){data, ack in
             let temporal = String(describing: data).components(separatedBy: ",")
             if temporal[1] == "ok"{
                 let alertaDos = UIAlertController (title: "Perfil Actualizado", message: "Su perfil se actualizo con ÉXITO. Los cambios se verán reflejados una vez que vuelva ingresar a la aplicación.", preferredStyle: UIAlertController.Style.alert)
@@ -72,8 +72,8 @@ class PerfilController: UIViewController {
     //FUNCIÓN ENVIAR AL SOCKET
     func EnviarSocket(_ datos: String){
         if CConexionInternet.isConnectedToNetwork() == true{
-            if myvariables.socket.status.active{
-                myvariables.socket.emit("data",datos)
+            if GlobalVariables.socket.status.active{
+                GlobalVariables.socket.emit("data",datos)
             }
             else{
                 let alertaDos = UIAlertController (title: "Sin Conexión", message: "No se puede conectar al servidor por favor intentar otra vez.", preferredStyle: UIAlertController.Style.alert)
@@ -109,7 +109,7 @@ class PerfilController: UIViewController {
             self.present(alertaDos, animated: true, completion: nil)
 
         }else{
-        let datos = "#UpdateUser," + myvariables.cliente.idUsuario + "," + myvariables.cliente.user + "," + self.NuevoTelefonoText + "," + myvariables.cliente.email + "," + self.NuevoEmailText + "," + self.ClaveActual + "," + self.NuevaClaveText + ",# \n"
+        let datos = "#UpdateUser," + GlobalVariables.cliente.idUsuario + "," + GlobalVariables.cliente.user + "," + self.NuevoTelefonoText + "," + GlobalVariables.cliente.email + "," + self.NuevoEmailText + "," + self.ClaveActual + "," + self.NuevaClaveText + ",# \n"
         EnviarSocket(datos)
         }
     }

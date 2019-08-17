@@ -10,6 +10,7 @@ target "TM" do
     pod 'MaterialComponents/TextFields'
     pod 'TextFieldEffects'
     pod 'Google-Mobile-Ads-SDK'
+    pod 'GooglePlaces'
     pod 'R.swift'
     
 end

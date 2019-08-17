@@ -27,11 +27,11 @@ extension PerfilController: UITableViewDelegate, UITableViewDataSource{
         switch indexPath.row {
         case 0:
             cell = Bundle.main.loadNibNamed("PerfilViewCell", owner: self, options: nil)?.first as! PerfilViewCell
-            (cell as! PerfilViewCell).ValorActual.text = myvariables.cliente.user
+            (cell as! PerfilViewCell).ValorActual.text = GlobalVariables.cliente.user
             (cell as! PerfilViewCell).NuevoValor.delegate = self
         case 1:
             cell = Bundle.main.loadNibNamed("Perfil2ViewCell", owner: self, options: nil)?.first as! Perfil2ViewCell
-            (cell as! Perfil2ViewCell).ValorActual.text = myvariables.cliente.email
+            (cell as! Perfil2ViewCell).ValorActual.text = GlobalVariables.cliente.email
             (cell as! Perfil2ViewCell).NuevoValor.delegate = self
         case 2:
             cell = Bundle.main.loadNibNamed("Perfil3ViewCell", owner: self, options: nil)?.first as! Perfil3ViewCell

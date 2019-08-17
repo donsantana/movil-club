@@ -33,10 +33,11 @@ extension TransporteMenuController: UICollectionViewDelegate, UICollectionViewDa
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let vc = R.storyboard.main.inicioView()
-    vc?.tipoTransporte = GlobalConstants.tranporteArray[indexPath.row]
-    let navController = UINavigationController(rootViewController: vc!)
-    let appdelegate = UIApplication.shared.delegate as! AppDelegate
-    appdelegate.window!.rootViewController = navController
+    vc?.transporteIndex = indexPath.row + 1
+    self.navigationController?.pushViewController(vc!, animated: true)
+//    let navController = UINavigationController(rootViewController: vc!)
+//    let appdelegate = UIApplication.shared.delegate as! AppDelegate
+//    appdelegate.window!.rootViewController = navController
   }
   
 }

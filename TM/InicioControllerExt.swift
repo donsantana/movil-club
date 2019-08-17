@@ -17,73 +17,74 @@ extension InicioController: UITextFieldDelegate{
     //Funciones para mover los elementos para que no queden detrás del teclado
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text?.removeAll()
-        if textField.isEqual(self.NombreContactoText) || textField.isEqual(self.TelefonoContactoText){
+        if textField.isEqual(self.contactoCell.contactoNameText) || textField.isEqual(self.TelefonoContactoText){
             if textField.isEqual(self.TelefonoContactoText){
                 self.TelefonoContactoText.textColor = UIColor.black
-                if (self.NombreContactoText.text?.isEmpty)! || !self.SoloLetras(name: self.NombreContactoText.text!){
+                if (self.contactoCell.contactoNameText.text?.isEmpty)! || !self.SoloLetras(name: self.contactoCell.contactoNameText.text!){
                     
                     let alertaDos = UIAlertController (title: "Contactar a otra persona", message: "Debe teclear el nombre de la persona que el conductor debe contactar.", preferredStyle: .alert)
                     alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
-                        self.NombreContactoText.becomeFirstResponder()
+                        self.contactoCell.contactoNameText.becomeFirstResponder()
                     }))
                     self.present(alertaDos, animated: true, completion: nil)
                 }
             }
             self.animateViewMoving(true, moveValue: 190, view: view)
         }else{
-            if textField.isEqual(self.origenText){
+            if textField.isEqual(self.origenCell.origenText){
                 if self.DireccionesArray.count != 0{
-                    self.TablaDirecciones.frame = CGRect(x: 22, y: Int(self.origenText.frame.origin.y + self.origenText.frame.height), width: Int(self.origenText.frame.width - 2) , height: 44 * self.DireccionesArray.count)
-                    self.TablaDirecciones.isHidden = false
-                    self.RecordarView.isHidden = true
+//                    self.TablaDirecciones.frame = CGRect(x: 22, y: Int(self.origenCell.origenText.frame.origin.y + self.origenCell.origenText.frame.height), width: Int(self.origenCell.origenText.frame.width - 2) , height: 44 * self.DireccionesArray.count)
+//                    self.TablaDirecciones.isHidden = false
+//                    self.RecordarView.isHidden = true
                 }
             }else{
-                if !(self.origenText.text?.isEmpty)!{
+                if !(self.origenCell.origenText.text?.isEmpty)!{
                     textField.text?.removeAll()
-                    animateViewMoving(true, moveValue: 130, view: self.view)
+                    //animateViewMoving(true, moveValue: 130, view: self.view)
                 }else{
                     self.view.resignFirstResponder()
-                    animateViewMoving(true, moveValue: 130, view: self.view)
                     let alertaDos = UIAlertController (title: "Dirección de Origen", message: "Debe teclear la dirección de recogida para orientar al conductor.", preferredStyle: .alert)
                     alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
-                        self.origenText.becomeFirstResponder()
+                        self.origenCell.origenText.becomeFirstResponder()
                     }))
                     
                     self.present(alertaDos, animated: true, completion: nil)
                 }
             }
         }
+      animateViewMoving(true, moveValue: 130, view: self.view)
     }
     
     func textFieldDidEndEditing(_ textfield: UITextField) {
-        if textfield.isEqual(self.NombreContactoText) || textfield.isEqual(self.TelefonoContactoText){
-            if textfield.isEqual(self.TelefonoContactoText) && textfield.text?.count != 10 && textfield.text?.count != 9 && !((self.NombreContactoText.text?.isEmpty)!){
+        if textfield.isEqual(self.contactoCell.contactoNameText) || textfield.isEqual(self.TelefonoContactoText){
+            if textfield.isEqual(self.TelefonoContactoText) && textfield.text?.count != 10 && textfield.text?.count != 9 && !((self.contactoCell.contactoNameText.text?.isEmpty)!){
                 textfield.textColor = UIColor.red
                 textfield.text = "Número de teléfono incorrecto"
             }
             self.animateViewMoving(false, moveValue: 190, view: view)
         }else{
-            if textfield.isEqual(self.referenciaText) || textfield.isEqual(self.destinoText){
+            if textfield.isEqual(self.origenCell.referenciaText) || textfield.isEqual(self.origenCell.destinoText){
                 self.animateViewMoving(false, moveValue: 130, view: view)
             }
         }
-        self.TablaDirecciones.isHidden = true
-        self.EnviarSolBtn.isEnabled = true
+//        self.TablaDirecciones.isHidden = true
+//        self.EnviarSolBtn.isEnabled = true
+      self.animateViewMoving(false, moveValue: 130, view: view)
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         if textField.text?.lengthOfBytes(using: .utf8) == 0{
-            self.TablaDirecciones.isHidden = false
-            self.RecordarView.isHidden = true
+//            self.TablaDirecciones.isHidden = false
+//            self.RecordarView.isHidden = true
         }else{
             if self.DireccionesArray.count < 5 && textField.text?.lengthOfBytes(using: .utf8) == 1 {
-                self.RecordarView.isHidden = false
-                //NSLayoutConstraint(item: self.RecordarView, attribute: .bottom, relatedBy: .equal, toItem: self.referenciaText, attribute: .top, multiplier: 1, constant: -10).isActive = true
-                //NSLayoutConstraint(item: self.origenText, attribute: .bottom, relatedBy: .equal, toItem: self.referenciaText, attribute: .top, multiplier: 1, constant: -(self.RecordarView.bounds.height + 20)).isActive = true
+                //self.RecordarView.isHidden = false
+                //NSLayoutConstraint(item: self.RecordarView, attribute: .bottom, relatedBy: .equal, toItem: self.origenCell.referenciaText, attribute: .top, multiplier: 1, constant: -10).isActive = true
+                //NSLayoutConstraint(item: self.origenCell.origenText, attribute: .bottom, relatedBy: .equal, toItem: self.origenCell.referenciaText, attribute: .top, multiplier: 1, constant: -(self.RecordarView.bounds.height + 20)).isActive = true
             }
-            self.TablaDirecciones.isHidden = true
+            //self.TablaDirecciones.isHidden = true
         }
-        self.EnviarSolBtn.isEnabled = true
+        //self.EnviarSolBtn.isEnabled = true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

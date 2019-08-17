@@ -73,7 +73,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
     
     self.apiRequestService.loginToAPIService()
     
-    myvariables.userDefaults = UserDefaults.standard
+    GlobalVariables.userDefaults = UserDefaults.standard
     
     self.coreLocationManager = CLLocationManager()
     coreLocationManager.delegate = self
@@ -114,10 +114,10 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
     self.movilClaveRecoverHeight.constant = 40
     
     //        if CConexionInternet.isConnectedToNetwork() == true{
-    //            myvariables.socket = self.socketIOManager.defaultSocket
-    //            myvariables.socket.connect()
+    //            GlobalVariables.socket = self.socketIOManager.defaultSocket
+    //            GlobalVariables.socket.connect()
     //
-    //            myvariables.socket.on("connect"){data, ack in
+    //            GlobalVariables.socket.on("connect"){data, ack in
     //                var loginData = "Vacio"
     //                let filePath = NSHomeDirectory() + "/Library/Caches/log.txt"
     //                do {
@@ -146,9 +146,9 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
     self.socketIOManager = SocketManager(socketURL: URL(string: Customization.serverData! )!, config: [.log(false), .forcePolling(true)]) //Customization.serverData
     
     if CConexionInternet.isConnectedToNetwork() == true{
-      myvariables.socket = self.socketIOManager.socket(forNamespace: "/")
+      GlobalVariables.socket = self.socketIOManager.socket(forNamespace: "/")
       
-      myvariables.socket.connect()
+      GlobalVariables.socket.connect()
       
       self.SocketEventos()
     }else{
@@ -159,30 +159,29 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
   
   //FUNCION PARA LISTAR SOLICITUDES PENDIENTES
   func ListSolicitudPendiente(_ listado : [String]){
-    //#LoginPassword,loginok,idusuario,idrol,idcliente,nombreapellidos,cantsolpdte,idsolicitud,idtaxi,cod,fechahora,lattaxi,lngtaxi, latorig,lngorig,latdest,lngdest,telefonoconductor
-    
+    //#LoginPassword", "loginok", "7", "donelkyss@gmail.com", "4", "DONE SANTANA ", "null", "1", "297", "1000000002", "8-8-2019 22:31:41", "29.75625", "-95.6115067", "29.7564199919038", "-95.6112594897197", "29.7564199919038", "-95.6112594897197", "TRDINOVA ULICA- LJUBLJANA- SLOVENIA", "TYUS ST- GROESBECK- TX- USA", "2", "8-8-2019 22:31:41", "54.0", "0", "detalles ", "# \n]  count 25
+    print(listado)
     var lattaxi = String()
     var longtaxi = String()
-    var i = 7
-    
-    while i <= listado.count-10 {
-      var solicitudpdte = CSolicitud()
-      if listado[i+4] == "null"{
+    var i = 9
+    print(listado.count)
+    while i <= listado.count - 16 {
+      let solicitudpdte = CSolicitud()
+      if listado[i + 3] == "null"{
         lattaxi = "0"
         longtaxi = "0"
       }else{
-        lattaxi = listado[i + 4]
-        longtaxi = listado[i + 5]
+        lattaxi = listado[i + 3]
+        longtaxi = listado[i + 4]
       }
-      solicitudpdte.idSolicitud = listado[i]
-      solicitudpdte.DatosCliente(cliente: myvariables.cliente)
-      solicitudpdte.DatosSolicitud(dirorigen: "", referenciaorigen: "", dirdestino: "", latorigen: listado[i + 6], lngorigen: listado[i + 7], latdestino: listado[i + 8], lngdestino: listado[i + 9],FechaHora: listado[i + 3])
-      solicitudpdte.DatosTaxiConductor(idtaxi: listado[i + 1], matricula: "", codigovehiculo: listado[i + 2], marcaVehiculo: "", colorVehiculo: "", lattaxi: lattaxi, lngtaxi: longtaxi, idconductor: "", nombreapellidosconductor: "", movilconductor: listado[i + 10], foto: "")
-      myvariables.solpendientes.append(solicitudpdte)
+      solicitudpdte.DatosCliente(cliente: GlobalVariables.cliente)
+      solicitudpdte.DatosSolicitud(idSolicitud: listado[i], fechaHora: listado[i + 2], dirOrigen: listado[i + 9], referenciaOrigen: listado[i + 9], dirDestino: listado[i + 10], latOrigen: Double(listado[i + 5]) as! Double, lngOrigen: Double(listado[i + 6]) as! Double, latDestino: Double(listado[i + 7]) as! Double, lngDestino: Double(listado[i + 8]) as! Double, valorOferta: listado[i + 13], detallesOferta: listado[i + 15], fechaReserva: listado[i + 12], tipoTransporte: listado[i + 11])
+      solicitudpdte.DatosTaxiConductor(idtaxi: listado[i + 1], matricula: "", codigovehiculo: "", marcaVehiculo: "", colorVehiculo: "", lattaxi: Double(lattaxi) as! Double, lngtaxi: Double(longtaxi) as! Double, idconductor: "", nombreapellidosconductor: "", movilconductor: "", foto: "")
+      GlobalVariables.solpendientes.append(solicitudpdte)
       if solicitudpdte.idTaxi != ""{
-        myvariables.solicitudesproceso = true
+        GlobalVariables.solicitudesproceso = true
       }
-      i += 11
+      i += 16
     }
   }
   
@@ -211,8 +210,8 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
   //FUNCIÓN ENVIAR AL SOCKET
   func EnviarSocket(_ datos: String){
     if CConexionInternet.isConnectedToNetwork() == true{
-      if myvariables.socket.status.active{
-        myvariables.socket.emit("data",datos)
+      if GlobalVariables.socket.status.active{
+        GlobalVariables.socket.emit("data",datos)
         self.EnviarTimer(estado: 1, datos: datos)
       }
       else{
@@ -230,12 +229,12 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
   
   @objc func EnviarSocket1(_ timer: Timer){
     if CConexionInternet.isConnectedToNetwork() == true{
-      if myvariables.socket.status.active && self.EnviosCount <= 3 {
+      if GlobalVariables.socket.status.active && self.EnviosCount <= 3 {
         self.EnviosCount += 1
         let userInfo = timer.userInfo as! Dictionary<String, AnyObject>
         let datos: String = (userInfo["datos"] as! String)
-        myvariables.socket.emit("data",datos)
-        //let result = myvariables.socket.emitWithAck("data", datos)
+        GlobalVariables.socket.emit("data",datos)
+        //let result = GlobalVariables.socket.emitWithAck("data", datos)
       }else{
         let alertaDos = UIAlertController (title: "Sin Conexión", message: "No se puede conectar al servidor por favor intentar otra vez.", preferredStyle: UIAlertController.Style.alert)
         alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
@@ -263,7 +262,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
     
     let loginData = "#LoginPassword," + self.Usuario.text! + "," + self.Clave.text! + ",# \n"
     
-    myvariables.userDefaults.set(loginData, forKey: "\(Customization.nameShowed)-loginData")
+    GlobalVariables.userDefaults.set(loginData, forKey: "\(Customization.nameShowed)-loginData")
     
     self.Clave.endEditing(true)
     self.Clave.text?.removeAll()
@@ -336,7 +335,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
 //        posicion = String(posTemp.coordinate.latitude) + "," + String(posTemp.coordinate.longitude)
 //      }
       let registroDatos = "#Registro,\(nombreApText.text!),\(telefonoText.text!),\(telefonoText.text!),\(claveText.text!),\(correo),# \n"
-      myvariables.socket.emit("data", registroDatos)
+      GlobalVariables.socket.emit("data", registroDatos)
       //self.EnviarTimer(estado: 1, datos: registroDatos)
     }
     RegistroView.isHidden = true
@@ -427,8 +426,8 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
 //    func ServerConect(completionHandler:@escaping (Bool)->()){
 //        var i = 0
 //        while i < self.ServersData.count - 1{
-//            myvariables.socket = self.socketIOManager.defaultSocket
-//            myvariables.socket.connect()
+//            GlobalVariables.socket = self.socketIOManager.defaultSocket
+//            GlobalVariables.socket.connect()
 //            i += 1
 //        }
 //        completionHandler(true)
