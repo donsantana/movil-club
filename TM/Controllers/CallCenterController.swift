@@ -27,7 +27,7 @@ class CallCenterController: UITableViewController {
       headerView.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.5)
       
       let sectionTitle: UILabel = UILabel.init(frame: CGRect(x: headerView.frame.width / 2 - 60, y: 15, width: 120, height: 20))
-      sectionTitle.font = UIFont(name: "HelveticaNeue", size: 20)
+      sectionTitle.font = UIFont(name: "HelveticaNeue-Bold", size: 20)
       sectionTitle.textAlignment = .center
       sectionTitle.textColor = .white
       sectionTitle.text = "Call Center"

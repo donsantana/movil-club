@@ -40,7 +40,7 @@ extension OfertasController: UITableViewDelegate, UITableViewDataSource{
     self.ofertaSeleccionada = GlobalVariables.ofertasList[indexPath.row]
     let datos = "#ASO,\(ofertaSeleccionada.idSolicitud),\(ofertaSeleccionada.idTaxi),\(ofertaSeleccionada.valorOferta), \(ofertaSeleccionada.tiempoLLegada),# \n"
     inicioController!.EnviarTimer(estado: 1, datos: datos)
-    self.SocketEventos()
+    self.socketEventos()
   }
   
   /*
@@ -90,7 +90,7 @@ extension OfertasController: UITableViewDelegate, UITableViewDataSource{
 }
 
 extension OfertasController{
-  func SocketEventos(){
+  func socketEventos(){
     GlobalVariables.socket.on("ASO"){data, ack in
       //Trama IN: #Solicitud, ok, idsolicitud, fechahora
       //Trama IN: #Solicitud, error

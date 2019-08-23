@@ -21,7 +21,7 @@ struct MenuData {
   var title: String
 }
 
-class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, UIApplicationDelegate, UIGestureRecognizerDelegate {
+class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, UIApplicationDelegate, UIGestureRecognizerDelegate {
   var coreLocationManager : CLLocationManager!
   var miposicion = MKPointAnnotation()
   var origenAnotacion = MKPointAnnotation()
@@ -60,7 +60,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   var DireccionesArray = [[String]]()//[["Dir 1", "Ref1"],["Dir2","Ref2"],["Dir3", "Ref3"],["Dir4","Ref4"],["Dir 5", "Ref5"]]//["Dir 1", "Dir2"]
   
   //Menu variables
-  var MenuArray = [MenuData(imagen: "solicitud", title: "Solicitudes en proceso"), MenuData(imagen: "callCenter", title: "Operadora"),MenuData(imagen: "clave", title: "Perfil"),MenuData(imagen: "infoMenu", title: "Información"),MenuData(imagen: "transporteMenu", title: "Tipo de Transporte"),MenuData(imagen: "compartir", title: "Compartir app"), MenuData(imagen: "sesion", title: "Cerrar Sesion"), MenuData(imagen: "salir2", title: "Salir")]
+  var MenuArray = [MenuData(imagen: "solicitud", title: "Solicitudes en proceso"), MenuData(imagen: "callCenter", title: "Operadora"),MenuData(imagen: "clave", title: "Perfil"),MenuData(imagen: "infoMenu", title: "Información"),MenuData(imagen: "transporteMenu", title: "Tipo de Transporte"),MenuData(imagen: "compartir", title: "Compartir app"), MenuData(imagen: "sesion", title: "Cerrar Sesion")]
   
   //variables de interfaz
   var TelefonoContactoText: UITextField!
@@ -100,20 +100,10 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
   @IBOutlet weak var CancelarSolicitudProceso: UIButton!
   
   @IBOutlet weak var solicitudFormTable: UITableView!
-  
-  //CUSTOM CONSTRAINTS
-  //  @IBOutlet weak var textFieldHeight: NSLayoutConstraint!
-  //  //@IBOutlet weak var recordarViewBottom: NSLayoutConstraint!
-  //  //@IBOutlet weak var origenTextBottom: NSLayoutConstraint!
-  //  @IBOutlet weak var datosSolictudBottom: NSLayoutConstraint!
-  //  @IBOutlet weak var contactoViewTop: NSLayoutConstraint!
-  //  @IBOutlet weak var contactViewHeight: NSLayoutConstraint!
-  //  @IBOutlet weak var voucherViewTop: NSLayoutConstraint!
-  
-  
-  
-  
+
   override func viewDidLoad() {
+    super.hideMenuBtn = false
+    super.barTitle = "TM"
     super.viewDidLoad()
     //LECTURA DEL FICHERO PARA AUTENTICACION
     
@@ -162,8 +152,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     
     self.tipoTransporte = transporteIndex != -1 ? GlobalConstants.tranporteArray[transporteIndex - 1] : ""
     self.transportIcon.image = UIImage(named: self.tipoTransporte)
-    
-    
+
     //INITIALIZING INTERFACES VARIABLES
     self.TelefonoContactoText = self.contactoCell.telefonoText
     self.reservaView = self.origenCell.reservaView
@@ -200,6 +189,28 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
       break
     }
     self.addEnvirSolictudBtn()
+    
+    GlobalVariables.socket.on("disconnect"){data, ack in
+      self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.Reconect), userInfo: nil, repeats: true)
+    }
+    
+    GlobalVariables.socket.on("connect"){data, ack in
+      let ColaHilos = OperationQueue()
+      let Hilos : BlockOperation = BlockOperation ( block: {
+        self.socketEventos()
+        self.timer.invalidate()
+      })
+      ColaHilos.addOperation(Hilos)
+      var read = "Vacio"
+      //var vista = ""
+      let filePath = NSHomeDirectory() + "/Library/Caches/log.txt"
+      do {
+        read = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
+      }catch {
+        
+      }
+    }
+    self.socketEventos()
   }
   
   override func viewDidAppear(_ animated: Bool){
@@ -296,13 +307,13 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     if CConexionInternet.isConnectedToNetwork() == true{
       if GlobalVariables.socket.status.active && self.EnviosCount <= 3{
         GlobalVariables.socket.emit("data",datos)
+        print(datos)
         //self.EnviarTimer(estado: 1, datos: datos)
       }else{
         let alertaDos = UIAlertController (title: "Sin Conexión", message: "No se puede conectar al servidor por favor intentar otra vez.", preferredStyle: UIAlertController.Style.alert)
         alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
           exit(0)
         }))
-        
         self.present(alertaDos, animated: true, completion: nil)
       }
     }else{
@@ -524,7 +535,6 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
 //    let datossolicitud = "\(nuevaSolicitud.dirOrigen), \(nuevaSolicitud.referenciaorigen), \(nuevaSolicitud.dirDestino), \(nuevaSolicitud.origenCoord.latitude), \(nuevaSolicitud.origenCoord.longitude), \(nuevaSolicitud.destinoCoord.latitude), \(nuevaSolicitud.destinoCoord.longitude)"
 //    let datosgeo = "\(nuevaSolicitud.distancia), \(nuevaSolicitud.valorOferta), , \(nuevaSolicitud.fechaReserva), \(nuevaSolicitud.tipoTransporte)"
     let datos = "#SO,\(nuevaSolicitud.idCliente),\(nuevaSolicitud.nombreApellidos),\(nuevaSolicitud.user),\(nuevaSolicitud.dirOrigen),\(nuevaSolicitud.referenciaorigen),\(nuevaSolicitud.dirDestino),\(nuevaSolicitud.origenCoord.latitude),\(nuevaSolicitud.origenCoord.longitude),\(nuevaSolicitud.destinoCoord.latitude),\(nuevaSolicitud.destinoCoord.longitude),\(nuevaSolicitud.distancia),\(nuevaSolicitud.valorOferta),\(voucher),\(nuevaSolicitud.detallesOferta),\(nuevaSolicitud.getFechaISO()),\(nuevaSolicitud.tipoTransporte),# \n"
-    print(datos)
     self.EnviarTimer(estado: 1, datos: datos)
     MensajeEspera.text = "Procesando..."
     self.AlertaEsperaView.isHidden = false
@@ -644,6 +654,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     self.MenuView1.isHidden = true
     self.TransparenciaView.isHidden = true
     self.Inicio()
+    super.topMenu.isHidden = false
   }
   
   //ADD FOOTER TO SOLICITDFORMTABLE
@@ -835,25 +846,33 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
     view.endEditing(true)
   }
   
-  //MARK:- BOTONES GRAFICOS ACCIONES
-  @IBAction func MostrarMenu(_ sender: Any) {
+  override func homeBtnAction(){
     self.MenuView1.isHidden = !self.MenuView1.isHidden
     self.MenuView1.startCanvasAnimation()
     self.TransparenciaView.isHidden = self.MenuView1.isHidden
-    //self.Inicio()
     self.TransparenciaView.startCanvasAnimation()
-    
+    super.topMenu.isHidden = true
   }
+  
+  //MARK:- BOTONES GRAFICOS ACCIONES
+  @IBAction func MostrarMenu(_ sender: Any) {
+//    self.MenuView1.isHidden = !self.MenuView1.isHidden
+//    self.MenuView1.startCanvasAnimation()
+//    self.TransparenciaView.isHidden = self.MenuView1.isHidden
+//    //self.Inicio()
+//    self.TransparenciaView.startCanvasAnimation()
+  }
+  
   @IBAction func SalirApp(_ sender: Any) {
-    let fileAudio = FileManager()
-    let AudioPath = NSHomeDirectory() + "/Library/Caches/Audio"
-    do {
-      try fileAudio.removeItem(atPath: AudioPath)
-    }catch{
-    }
-    let datos = "#SocketClose," + GlobalVariables.cliente.idCliente + ",# \n"
-    EnviarSocket(datos)
-    exit(3)
+//    let fileAudio = FileManager()
+//    let AudioPath = NSHomeDirectory() + "/Library/Caches/Audio"
+//    do {
+//      try fileAudio.removeItem(atPath: AudioPath)
+//    }catch{
+//    }
+//    let datos = "#SocketClose," + GlobalVariables.cliente.idCliente + ",# \n"
+//    EnviarSocket(datos)
+//    exit(3)
   }
   
   @IBAction func RelocateBtn(_ sender: Any) {
@@ -1006,7 +1025,6 @@ class InicioController: UIViewController, CLLocationManagerDelegate, URLSessionD
       vc.telefonosCallCenter = GlobalVariables.TelefonosCallCenter
       self.navigationController?.show(vc, sender: nil)
     }
-    
   }
   
   @IBAction func MostrarSolPendientes(_ sender: AnyObject) {

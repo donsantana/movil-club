@@ -81,19 +81,21 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
           vc!.solicitudesMostrar = GlobalVariables.solpendientes
           self.navigationController?.show(vc!, sender: nil)
         }else{
-          self.SolPendientesView.isHidden = false
+          //self.SolPendientesView.isHidden = false
         }
-      case "Operadora"?:
+      case "Operadora":
         let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "CallCenter") as! CallCenterController
         vc.telefonosCallCenter = GlobalVariables.TelefonosCallCenter
         self.navigationController?.show(vc, sender: nil)
-      case "Perfil"?:
+        
+      case "Perfil":
         let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "Perfil") as! PerfilController
         self.navigationController?.show(vc, sender: nil)
-      case "Tipo de Transporte"?:
+        
+      case "Tipo de Transporte":
         self.showTransporteMenu()
         
-      case "Compartir app"?:
+      case "Compartir app":
         if let name = URL(string: GlobalConstants.itunesURL) {
           let objectsToShare = [name]
           let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)

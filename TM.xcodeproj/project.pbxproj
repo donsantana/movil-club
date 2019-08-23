@@ -46,6 +46,8 @@
 		B5F753E51D5D045500FFDFD0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5F753E31D5D045500FFDFD0 /* Main.storyboard */; };
 		C60C16562302736B0090F4E0 /* OurDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C16552302736B0090F4E0 /* OurDate.swift */; };
 		C60C16582302760B0090F4E0 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C16572302760B0090F4E0 /* UIButton.swift */; };
+		C6253C16230B9CBE0010F6A3 /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6253C15230B9CBE0010F6A3 /* BaseController.swift */; };
+		C6253C18230E35940010F6A3 /* SolPendSocketExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6253C17230E35940010F6A3 /* SolPendSocketExt.swift */; };
 		C6384BEA22A43A46000EB156 /* UIToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6384BE922A43A46000EB156 /* UIToolbar.swift */; };
 		C63A6FA9227F60D50095AF3C /* InicioControllerSocketExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C63A6FA8227F60D50095AF3C /* InicioControllerSocketExt.swift */; };
 		C63A6FAB227F62660095AF3C /* LoginControllerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C63A6FAA227F62660095AF3C /* LoginControllerExt.swift */; };
@@ -139,6 +141,8 @@
 		BC841ED403296E181D346C06 /* Pods-TM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TM.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TM/Pods-TM.debug.xcconfig"; sourceTree = "<group>"; };
 		C60C16552302736B0090F4E0 /* OurDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OurDate.swift; sourceTree = "<group>"; };
 		C60C16572302760B0090F4E0 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		C6253C15230B9CBE0010F6A3 /* BaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
+		C6253C17230E35940010F6A3 /* SolPendSocketExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolPendSocketExt.swift; sourceTree = "<group>"; };
 		C6384BE922A43A46000EB156 /* UIToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIToolbar.swift; sourceTree = "<group>"; };
 		C63A6FA8227F60D50095AF3C /* InicioControllerSocketExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InicioControllerSocketExt.swift; sourceTree = "<group>"; };
 		C63A6FAA227F62660095AF3C /* LoginControllerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginControllerExt.swift; sourceTree = "<group>"; };
@@ -312,6 +316,7 @@
 				C63A6FB0227F675A0095AF3C /* ApiRequestController.swift */,
 				C68ED7BD2298B5D500E2F8AC /* TransporteMenuController.swift */,
 				C643639F22EBC44E0006F235 /* OfertasController.swift */,
+				C6253C15230B9CBE0010F6A3 /* BaseController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -377,10 +382,11 @@
 				C6AFBD1022186DC100CC060A /* InicioControllerExt.swift */,
 				C63A6FA8227F60D50095AF3C /* InicioControllerSocketExt.swift */,
 				C63A6FAA227F62660095AF3C /* LoginControllerExt.swift */,
+				C65F9F37229E42AD00E3E304 /* InicioControllerTablesExt.swift */,
 				C63A6FAC227F63160095AF3C /* LoginControllerSocketExt.swift */,
 				C63A6FAE227F65A00095AF3C /* PerfilControllerExt.swift */,
-				C65F9F37229E42AD00E3E304 /* InicioControllerTablesExt.swift */,
 				C64363A122EBC4A50006F235 /* OfertasControllerExt.swift */,
+				C6253C17230E35940010F6A3 /* SolPendSocketExt.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -619,6 +625,7 @@
 				C65F9F36229E3C4F00E3E304 /* ContactoViewCell.swift in Sources */,
 				C60C16582302760B0090F4E0 /* UIButton.swift in Sources */,
 				AFD6563F1F9D42E100C8A5BD /* CRuta.swift in Sources */,
+				C6253C16230B9CBE0010F6A3 /* BaseController.swift in Sources */,
 				C63A6FB1227F675A0095AF3C /* ApiRequestController.swift in Sources */,
 				C63A6FAD227F63160095AF3C /* LoginControllerSocketExt.swift in Sources */,
 				AFD6563D1F9D42E100C8A5BD /* CSMSVoz.swift in Sources */,
@@ -659,6 +666,7 @@
 				C6384BEA22A43A46000EB156 /* UIToolbar.swift in Sources */,
 				C6915F21228500420048C00C /* SMSVoz.swift in Sources */,
 				AFD6563E1F9D42E100C8A5BD /* CEvaluacion.swift in Sources */,
+				C6253C18230E35940010F6A3 /* SolPendSocketExt.swift in Sources */,
 				C68DA298227E12D40029CD0B /* MKMapView.swift in Sources */,
 				C63A6FAF227F65A00095AF3C /* PerfilControllerExt.swift in Sources */,
 				AF3D9E181FA51A190019432B /* PerfilViewCell.swift in Sources */,

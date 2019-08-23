@@ -11,7 +11,7 @@ import UIKit
 import AVFoundation
 
 extension InicioController{
-  func SocketEventos(){
+  func socketEventos(){
     
     //Evento sockect para escuchar
     //TRAMA IN: #LoginPassword,loginok,idusuario,idrol,idcliente,nombreapellidos,cantsolpdte,idsolicitud,idtaxi,cod,fechahora,lattaxi,lngtaxi,latorig,lngorig,latdest,lngdest,telefonoconductor
@@ -73,6 +73,7 @@ extension InicioController{
     GlobalVariables.socket.on("Posicion"){data, ack in
       self.EnviarTimer(estado: 0, datos: "Terminado")
       let temporal = String(describing: data).components(separatedBy: ",")
+      print(temporal)
       if temporal[1] == "0" {
         let alertaDos = UIAlertController(title: "Solicitud de \(self.tipoTransporte!.uppercased())", message: "No hay \(self.tipoTransporte!.uppercased()) disponibles en este momento, espere unos minutos y vuelva a intentarlo.", preferredStyle: UIAlertController.Style.alert )
         alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
@@ -89,7 +90,6 @@ extension InicioController{
     GlobalVariables.socket.on("SO"){data, ack in
       //Trama IN: #Solicitud, ok, idsolicitud, fechahora
       //Trama IN: #Solicitud, error
-      print(data)
       self.EnviarTimer(estado: 0, datos: "terminando")
       let temporal = String(describing: data).components(separatedBy: ",")
       print(temporal)
@@ -210,31 +210,7 @@ extension InicioController{
 //      }
 //    }
     
-    GlobalVariables.socket.on("Completada"){data, ack in
-      //'#Completada,'+idsolicitud+','+idtaxi+','+distancia+','+tiempoespera+','+importe+',# \n'
-      let temporal = String(describing: data).components(separatedBy: ",")
-      
-      if GlobalVariables.solpendientes.count != 0{
-        let pos = self.BuscarPosSolicitudID(temporal[1])
-        GlobalVariables.solpendientes.remove(at: pos)
-        if GlobalVariables.solpendientes.count != 0{
-          self.SolPendientesView.isHidden = true
-          
-        }
-        
-        DispatchQueue.main.async {
-          let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "completadaView") as! CompletadaController
-          vc.idSolicitud = temporal[1]
-          vc.idTaxi = temporal[2]
-          vc.distanciaValue = temporal[3]
-          vc.tiempoValue = temporal[4]
-          vc.costoValue = temporal[5]
-          
-          self.navigationController?.show(vc, sender: nil)
-        }
-        
-      }
-    }
+    
     
     GlobalVariables.socket.on("Cambioestadosolicitudconductor"){data, ack in
       let temporal = String(describing: data).components(separatedBy: ",")
@@ -323,28 +299,5 @@ extension InicioController{
         }
       }
     }
-    
-    GlobalVariables.socket.on("disconnect"){data, ack in
-      self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.Reconect), userInfo: nil, repeats: true)
-    }
-    
-    GlobalVariables.socket.on("connect"){data, ack in
-      let ColaHilos = OperationQueue()
-      let Hilos : BlockOperation = BlockOperation ( block: {
-        self.SocketEventos()
-        self.timer.invalidate()
-      })
-      ColaHilos.addOperation(Hilos)
-      var read = "Vacio"
-      //var vista = ""
-      let filePath = NSHomeDirectory() + "/Library/Caches/log.txt"
-      do {
-        read = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
-      }catch {
-        
-      }
-    }
-    
-    
   }
 }

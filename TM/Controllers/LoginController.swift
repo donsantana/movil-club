@@ -129,7 +129,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
     //                }else{
     //                    self.AutenticandoView.isHidden = true
     //                }
-    //                self.SocketEventos()
+    //                self.socketEventos()
     //            }
     //        }else{
     //            ErrorConexion()
@@ -150,7 +150,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
       
       GlobalVariables.socket.connect()
       
-      self.SocketEventos()
+      self.socketEventos()
     }else{
       ErrorConexion()
     }
@@ -199,7 +199,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
   func EnviarTimer(estado: Int, datos: String){
     if estado == 1{
       if !self.emitTimer.isValid{
-        self.emitTimer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(EnviarSocket1(_:)), userInfo: ["datos": datos], repeats: true)
+        self.emitTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(EnviarSocket1(_:)), userInfo: ["datos": datos], repeats: true)
       }
     }else{
       self.emitTimer.invalidate()

@@ -42,7 +42,7 @@ import SocketIO
             }else{
                 self.AutenticandoView.isHidden = true
             }
-            self.SocketEventos()
+            self.socketEventos()
         }
         <#function body#>
     }

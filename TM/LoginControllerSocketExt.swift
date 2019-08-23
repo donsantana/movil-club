@@ -13,7 +13,7 @@ import Rswift
 
 extension LoginController{
   
-  func SocketEventos(){
+  func socketEventos(){
     GlobalVariables.socket.on("connect"){data, ack in
       let read = GlobalVariables.userDefaults.string(forKey: "\(Customization.nameShowed)-loginData") ?? "Vacio"
       //            let filePath = NSHomeDirectory() + "/Library/Caches/log.txt"
@@ -40,7 +40,7 @@ extension LoginController{
         if GlobalVariables.socket.status.active{
           let ColaHilos = OperationQueue()
           let Hilos : BlockOperation = BlockOperation (block: {
-            self.SocketEventos()
+            self.socketEventos()
             let url = "#U,# \n"
             self.EnviarSocket(url)
             let telefonos = "#Telefonos,# \n"

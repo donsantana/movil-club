@@ -11,7 +11,7 @@ import MapKit
 import SocketIO
 import GoogleMobileAds
 
-class SolPendController: UIViewController, MKMapViewDelegate, UITextViewDelegate,URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
+class SolPendController: BaseController, MKMapViewDelegate, UITextViewDelegate,URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
   
   var solicitudPendiente: CSolicitud!
   var solicitudIndex: Int!
@@ -79,58 +79,13 @@ class SolPendController: UIViewController, MKMapViewDelegate, UITextViewDelegate
     self.adsBannerView.rootViewController = self
     self.adsBannerView.load(GADRequest())
     self.adsBannerView.delegate = self
-    
-    //MASK:- EVENTOS SOCKET
-    GlobalVariables.socket.on("Transporte"){data, ack in
-      //"#Taxi,"+nombreconductor+" "+apellidosconductor+","+telefono+","+codigovehiculo+","+gastocombustible+","+marcavehiculo+","+colorvehiculo+","+matriculavehiculo+","+urlfoto+","+idconductor+",# \n";
-      let datosConductor = String(describing: data).components(separatedBy: ",")
-      self.NombreCond.text! = "Conductor: \(datosConductor[1])"
-      self.MarcaAut.text! = "Marca: \(datosConductor[5])"
-      self.ColorAut.text! = "Color: \(datosConductor[6])"
-      self.MatriculaAut.text! = "Matrícula: \(datosConductor[7])"
-      self.MovilCond.text! = "Movil: \(datosConductor[2])"
-      if datosConductor[8] != "null" && datosConductor[8] != ""{
-        let url = URL(string:datosConductor[8])
-        
-        let task = URLSession.shared.dataTask(with: url!) { data, response, error in
-          guard let data = data, error == nil else { return }
-          
-          DispatchQueue.main.sync() {
-            self.ImagenCond.image = UIImage(data: data)
-          }
-        }
-        task.resume()
-      }else{
-        self.ImagenCond.image = UIImage(named: "chofer")
-      }
-      self.AlertaEsperaView.isHidden = true
-      self.DatosConductor.isHidden = false
-    }
-    
-    GlobalVariables.socket.on("V"){data, ack in
-      self.MensajesBtn.isHidden = false
-      self.MensajesBtn.setImage(UIImage(named: "mensajesnew"),for: UIControl.State())
-    }
-    
-    //GEOPOSICION DE TAXIS
-    GlobalVariables.socket.on("Geo"){data, ack in
-      let temporal = String(describing: data).components(separatedBy: ",")
-      if GlobalVariables.solpendientes.count != 0 {
-        if (temporal[2] == self.solicitudPendiente.idTaxi){
-          self.MapaSolPen.removeAnnotation(self.TaxiSolicitud)
-          self.solicitudPendiente.taximarker = CLLocationCoordinate2DMake(Double(temporal[3])!, Double(temporal[4])!)
-          //self.TaxiSolicitud.coordinate = CLLocationCoordinate2DMake(Double(temporal[3])!, Double(temporal[4])!)
-          //self.MapaSolPen.addAnnotation(self.TaxiSolicitud)
-          //self.MapaSolPen.showAnnotations(self.MapaSolPen.annotations, animated: true)
-          self.MostrarDetalleSolicitud()
-        }
-      }
-    }
-    
+
     if GlobalVariables.urlconductor != ""{
       self.MensajesBtn.isHidden = false
       self.MensajesBtn.setImage(UIImage(named: "mensajesnew"),for: UIControl.State())
     }
+    
+    self.socketEventos()
   }
   
   func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -256,6 +211,11 @@ class SolPendController: UIViewController, MKMapViewDelegate, UITextViewDelegate
     EnviarSocket(Datos)
     let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "Inicio") as! InicioController
     self.navigationController?.show(vc, sender: nil)
+  }
+  
+  override func homeBtnAction() {
+    let vc = R.storyboard.main.inicioView()
+    self.navigationController?.show(vc!, sender: nil)
   }
   
   //MASK:- ACCIONES DE BOTONES
