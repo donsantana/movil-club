@@ -48,12 +48,13 @@ extension SolPendController{
     GlobalVariables.socket.on("Geo"){data, ack in
       let temporal = String(describing: data).components(separatedBy: ",")
       if GlobalVariables.solpendientes.count != 0 {
-        if (temporal[2] == self.solicitudPendiente.idTaxi){
+        if (temporal[1] == self.solicitudPendiente.idTaxi){
+     
           self.MapaSolPen.removeAnnotation(self.TaxiSolicitud)
-          self.solicitudPendiente.taximarker = CLLocationCoordinate2DMake(Double(temporal[3])!, Double(temporal[4])!)
-          //self.TaxiSolicitud.coordinate = CLLocationCoordinate2DMake(Double(temporal[3])!, Double(temporal[4])!)
-          //self.MapaSolPen.addAnnotation(self.TaxiSolicitud)
-          //self.MapaSolPen.showAnnotations(self.MapaSolPen.annotations, animated: true)
+          self.solicitudPendiente.taximarker = CLLocationCoordinate2DMake(Double(temporal[2])!, Double(temporal[3])!)
+          self.TaxiSolicitud.coordinate = CLLocationCoordinate2DMake(Double(temporal[2])!, Double(temporal[3])!)
+          self.MapaSolPen.addAnnotation(self.TaxiSolicitud)
+          self.MapaSolPen.showAnnotations(self.MapaSolPen.annotations, animated: true)
           self.MostrarDetalleSolicitud()
         }
       }
@@ -62,19 +63,11 @@ extension SolPendController{
     GlobalVariables.socket.on("Completada"){data, ack in
       //'#Completada,'+idsolicitud+','+idtaxi+','+distancia+','+tiempoespera+','+importe+',# \n'
       let temporal = String(describing: data).components(separatedBy: ",")
-      print(temporal)
       if GlobalVariables.solpendientes.count != 0{
-        let pos = GlobalVariables.solpendientes.firstIndex{$0.idCliente == temporal[1]}
-        print("pos \(pos)")
-        //GlobalVariables.solpendientes.remove(at: pos!)
+        GlobalVariables.solpendientes.remove(at: GlobalVariables.solpendientes.firstIndex{$0.idSolicitud == temporal[1]}!)
         DispatchQueue.main.async {
           let vc = R.storyboard.main.completadaView()!
           vc.idSolicitud = temporal[1]
-//          vc.idTaxi = temporal[2]
-//          vc.distanciaValue = temporal[3]
-//          vc.tiempoValue = temporal[4]
-//          vc.costoValue = temporal[5]
-
           self.navigationController?.show(vc, sender: nil)
         }
 

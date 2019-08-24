@@ -209,7 +209,7 @@ class SolPendController: BaseController, MKMapViewDelegate, UITextViewDelegate,U
     let Datos = "#CSO" + "," + self.solicitudPendiente.idSolicitud + "," + self.solicitudPendiente.idTaxi + "," + motivo + "," + "# \n"
     GlobalVariables.solpendientes.remove(at: self.solicitudIndex)
     EnviarSocket(Datos)
-    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "Inicio") as! InicioController
+    let vc = R.storyboard.main.inicioView()!
     self.navigationController?.show(vc, sender: nil)
   }
   

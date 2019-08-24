@@ -501,6 +501,7 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     
     if Temporal[1] == "ok"{
       GlobalVariables.solpendientes.last!.RegistrarFechaHora(IdSolicitud: Temporal[2], FechaHora: Temporal[3])
+      print(GlobalVariables.solpendientes.last?.idSolicitud)
     }
     else{
       if Temporal[1] == "error"{

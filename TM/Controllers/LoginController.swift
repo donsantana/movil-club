@@ -160,11 +160,9 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
   //FUNCION PARA LISTAR SOLICITUDES PENDIENTES
   func ListSolicitudPendiente(_ listado : [String]){
     //#LoginPassword", "loginok", "7", "donelkyss@gmail.com", "4", "DONE SANTANA ", "null", "1", "297", "1000000002", "8-8-2019 22:31:41", "29.75625", "-95.6115067", "29.7564199919038", "-95.6112594897197", "29.7564199919038", "-95.6112594897197", "TRDINOVA ULICA- LJUBLJANA- SLOVENIA", "TYUS ST- GROESBECK- TX- USA", "2", "8-8-2019 22:31:41", "54.0", "0", "detalles ", "# \n]  count 25
-    print(listado)
     var lattaxi = String()
     var longtaxi = String()
     var i = 9
-    print(listado.count)
     while i <= listado.count - 16 {
       let solicitudpdte = CSolicitud()
       if listado[i + 3] == "null"{
