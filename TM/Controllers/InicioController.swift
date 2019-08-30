@@ -36,7 +36,6 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
   var transporteIndex: Int! = -1
   var tipoTransporte: String!
   
-  
   var origenCell = Bundle.main.loadNibNamed("OrigenCell", owner: self, options: nil)?.first as! OrigenViewCell
   var voucherCell = Bundle.main.loadNibNamed("VoucherCell", owner: self, options: nil)?.first as! VoucherViewCell
   var contactoCell = Bundle.main.loadNibNamed("ContactoCell", owner: self, options: nil)?.first as! ContactoViewCell
@@ -48,9 +47,7 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
   //Reconect Timer
   var timer = Timer()
   //var fechahora: String!
-  
-  
-  
+
   //Timer de Envio
   var EnviosCount = 0
   var emitTimer = Timer()
@@ -60,7 +57,7 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
   var DireccionesArray = [[String]]()//[["Dir 1", "Ref1"],["Dir2","Ref2"],["Dir3", "Ref3"],["Dir4","Ref4"],["Dir 5", "Ref5"]]//["Dir 1", "Dir2"]
   
   //Menu variables
-  var MenuArray = [MenuData(imagen: "solicitud", title: "Solicitudes en proceso"), MenuData(imagen: "callCenter", title: "Operadora"),MenuData(imagen: "clave", title: "Perfil"),MenuData(imagen: "infoMenu", title: "Información"),MenuData(imagen: "transporteMenu", title: "Tipo de Transporte"),MenuData(imagen: "compartir", title: "Compartir app"), MenuData(imagen: "sesion", title: "Cerrar Sesion")]
+  var MenuArray = [MenuData(imagen: "solicitud", title: "Solicitudes en proceso"), MenuData(imagen: "callCenter", title: "Operadora"),MenuData(imagen: "clave", title: "Perfil"),MenuData(imagen: "transporteMenu", title: "Tipo de Transporte"),MenuData(imagen: "compartir", title: "Compartir app"), MenuData(imagen: "sesion", title: "Cerrar Sesion")] //,MenuData(imagen: "infoMenu", title: "Información")
   
   //variables de interfaz
   var TelefonoContactoText: UITextField!
@@ -104,15 +101,16 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
   override func viewDidLoad() {
     super.hideMenuBtn = false
     super.barTitle = "TM"
+    super.topMenu.bringSubviewToFront(self.formularioSolicitud)
     super.viewDidLoad()
     //LECTURA DEL FICHERO PARA AUTENTICACION
-    
+ 
     mapaVista.delegate = self
     coreLocationManager = CLLocationManager()
     coreLocationManager.delegate = self
     //    self.origenCell.referenciaText.delegate = self
-    //self.contactoCell.contactoNameText.delegate = self
-    //self.TelefonoContactoText.delegate = self
+    self.contactoCell.contactoNameText.delegate = self
+    self.contactoCell.telefonoText.delegate = self
     //    self.origenCell.origenText.delegate = self
     //    self.origenCell.destinoText.delegate = self
     //    self.solicitudFormTable.delegate = self
@@ -136,7 +134,6 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     self.SolicitudView.addShadow()
     
     self.MenuView1.backgroundColor = Customization.primaryColor
-    self.SolPendientesView.backgroundColor = Customization.primaryColor
     
     coreLocationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
     coreLocationManager.startUpdatingLocation()  //Iniciar servicios de actualiación de localización del usuario
@@ -169,25 +166,9 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     let region = MKCoordinateRegion(center: self.origenAnotacion.coordinate, span: span)
     self.mapaVista.setRegion(region, animated: true)
     
-    self.origenCell.origenText.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    self.origenCell.origenText.addTarget(self, action: #selector(textViewDidChange(_:)), for: .editingChanged)
     
-    //PEDIR PERMISO PARA EL MICROPHONO
-    switch AVAudioSession.sharedInstance().recordPermission {
-    case AVAudioSession.RecordPermission.granted:
-      print("Permission granted")
-    case AVAudioSession.RecordPermission.denied:
-      print("Pemission denied")
-    case AVAudioSession.RecordPermission.undetermined:
-      AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
-        if granted {
-          
-        } else{
-          
-        }
-      })
-    default:
-      break
-    }
+    
     self.addEnvirSolictudBtn()
     
     GlobalVariables.socket.on("disconnect"){data, ack in
@@ -371,6 +352,8 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     SolPendientesView.isHidden = true
     CancelarSolicitudProceso.isHidden = true
     AlertaEsperaView.isHidden = true
+    super.topMenu.isHidden = false
+    self.viewDidLoad()
   }
   
   //DIRECCIONES FAVORITAS
@@ -674,6 +657,21 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     self.solicitudFormTable.tableFooterView = enviarBtnView
   }
   
+  func converAddressToCoord(address: String)->CLLocationCoordinate2D{
+    var coordinates = self.miposicion.coordinate
+    var geocoder = CLGeocoder()
+    geocoder.geocodeAddressString(address) {
+      placemarks, error in
+      let placemark = placemarks?.first
+      coordinates = (placemark?.location!.coordinate)!
+      let lat = placemark?.location?.coordinate.latitude
+      let lon = placemark?.location?.coordinate.longitude
+      print("Lat: \(lat), Lon: \(lon)")
+    }
+    return coordinates
+    
+  }
+  
   @objc func enviarSolicitud(){
     //#SO,idcliente,nombreapellidos,movil,dirorigen,referencia,dirdestino,latorigen,lngorigen,ladestino,lngdestino,distanciaorigendestino,valor oferta,voucher,detalle oferta,fecha reserva,tipo transporte,#
     
@@ -687,13 +685,13 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
       
       let origen = self.cleanTextField(textfield: self.origenCell.origenText)
       
-      let origenCoord = self.miposicion.coordinate
+      let origenCoord = self.converAddressToCoord(address: origen)//self.miposicion.coordinate
       
       let referencia = self.cleanTextField(textfield: self.origenCell.referenciaText)
       
       let destino = self.cleanTextField(textfield: self.origenCell.destinoText)
       
-      let destinoCoord = self.miposicion.coordinate
+      let destinoCoord = self.converAddressToCoord(address: destino)//self.miposicion.coordinate
       
       //let valorOferta = self.origenCell.ofertaText.text
       
@@ -786,7 +784,7 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     animateViewMoving(false, moveValue: 60, view: self.view)
   }
   
-  func textViewDidChange(_ textView: UITextView) {
+  @objc func textViewDidChange(_ textView: UITextView) {
     
   }
   
@@ -886,6 +884,7 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
   @IBAction func Solicitar(_ sender: AnyObject) {
     //TRAMA OUT: #Posicion,idCliente,latorig,lngorig
     if self.tipoTransporte != ""{
+      super.topMenu.isHidden = true
       self.addEnvirSolictudBtn()
       self.origenAnotacion.coordinate = self.miposicion.coordinate
       let datos = "#Posicion,\(GlobalVariables.cliente.idCliente!),\(self.origenAnotacion.coordinate.latitude),\(self.origenAnotacion.coordinate.longitude),\(self.transporteIndex!),# \n"
@@ -1019,30 +1018,30 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     MostrarMotivoCancelacion()
   }
   
-  @IBAction func MostrarTelefonosCC(_ sender: AnyObject) {
-    self.SolPendientesView.isHidden = true
-    DispatchQueue.main.async {
-      let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "CallCenter") as! CallCenterController
-      vc.telefonosCallCenter = GlobalVariables.TelefonosCallCenter
-      self.navigationController?.show(vc, sender: nil)
-    }
-  }
-  
-  @IBAction func MostrarSolPendientes(_ sender: AnyObject) {
-    if GlobalVariables.solpendientes.count > 0{
-      DispatchQueue.main.async {
-        let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ListaSolPdtes") as! SolicitudesTableController
-        vc.solicitudesMostrar = GlobalVariables.solpendientes
-        self.navigationController?.show(vc, sender: nil)
-      }
-    }else{
-      self.SolPendientesView.isHidden = !self.SolPendientesView.isHidden
-    }
-  }
-  
-  @IBAction func MapaMenu(_ sender: AnyObject) {
-    Inicio()
-  }
+//  @IBAction func MostrarTelefonosCC(_ sender: AnyObject) {
+//    self.SolPendientesView.isHidden = true
+//    DispatchQueue.main.async {
+//      let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "CallCenter") as! CallCenterController
+//      vc.telefonosCallCenter = GlobalVariables.TelefonosCallCenter
+//      self.navigationController?.show(vc, sender: nil)
+//    }
+//  }
+//
+//  @IBAction func MostrarSolPendientes(_ sender: AnyObject) {
+//    if GlobalVariables.solpendientes.count > 0{
+//      DispatchQueue.main.async {
+//        let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ListaSolPdtes") as! SolicitudesTableController
+//        vc.solicitudesMostrar = GlobalVariables.solpendientes
+//        self.navigationController?.show(vc, sender: nil)
+//      }
+//    }else{
+//      self.SolPendientesView.isHidden = !self.SolPendientesView.isHidden
+//    }
+//  }
+//  
+//  @IBAction func MapaMenu(_ sender: AnyObject) {
+//    Inicio()
+//  }
   
   @IBAction func closeSolicitudForm(_ sender: Any) {
     Inicio()

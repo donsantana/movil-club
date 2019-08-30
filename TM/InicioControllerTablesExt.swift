@@ -81,7 +81,9 @@ extension InicioController: UITableViewDelegate, UITableViewDataSource{
           vc!.solicitudesMostrar = GlobalVariables.solpendientes
           self.navigationController?.show(vc!, sender: nil)
         }else{
-          //self.SolPendientesView.isHidden = false
+          super.topMenu.isHidden = false
+          self.viewDidLoad()
+          self.SolPendientesView.isHidden = false
         }
       case "Operadora":
         let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "CallCenter") as! CallCenterController

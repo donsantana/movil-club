@@ -14,7 +14,7 @@ struct Customization {
   static var appName: String!
   static var nameShowed: String = "TM"
   static var logo: UIImage!
-  static var primaryColor: UIColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1) //#1f1f1f
+  static var primaryColor: UIColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.6) //#1f1f1f
   static var textColor: UIColor = .white
   static var headerText: UIColor = .white
   static var usaVoucher: Bool = true

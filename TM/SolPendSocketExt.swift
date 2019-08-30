@@ -73,5 +73,24 @@ extension SolPendController{
 
       }
     }
+    
+    //RESPUESTA DE CANCELAR SOLICITUD
+    GlobalVariables.socket.on("CSO"){data, ack in
+      let vc = R.storyboard.main.inicioView()!
+      vc.EnviarTimer(estado: 0, datos: "Terminado")
+      let temporal = String(describing: data).components(separatedBy: ",")
+      print("Cancelada \(temporal)")
+//      if temporal[1] == "ok"{
+////        let alertaDos = UIAlertController (title: "Cancelar Solicitud", message: "Su solicitud fue cancelada.", preferredStyle: UIAlertController.Style.alert)
+////        alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
+////          //self.Inicio()
+////          if GlobalVariables.solpendientes.count != 0{
+////            self.SolPendientesView.isHidden = true
+////
+////          }
+//        }))
+//        self.present(alertaDos, animated: true, completion: nil)
+//      }
+    }
   }
 }

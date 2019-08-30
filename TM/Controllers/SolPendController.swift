@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import SocketIO
+import AVFoundation
 import GoogleMobileAds
 
 class SolPendController: BaseController, MKMapViewDelegate, UITextViewDelegate,URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
@@ -75,7 +76,7 @@ class SolPendController: BaseController, MKMapViewDelegate, UITextViewDelegate,U
     self.SMSVozBtn.addGestureRecognizer(longGesture)
     
     //ADS BANNER VIEW
-    self.adsBannerView.adUnitID = "ca-app-pub-1778988557303127~7105663047"//"ca-app-pub-1778988557303127/7379745779"
+    self.adsBannerView.adUnitID = "ca-app-pub-1778988557303127/8408614115" //"ca-app-pub-3940256099942544/2934735716"//"ca-app-pub-1778988557303127/8408614115"
     self.adsBannerView.rootViewController = self
     self.adsBannerView.load(GADRequest())
     self.adsBannerView.delegate = self
@@ -83,6 +84,24 @@ class SolPendController: BaseController, MKMapViewDelegate, UITextViewDelegate,U
     if GlobalVariables.urlconductor != ""{
       self.MensajesBtn.isHidden = false
       self.MensajesBtn.setImage(UIImage(named: "mensajesnew"),for: UIControl.State())
+    }
+    
+    //PEDIR PERMISO PARA EL MICROPHONO
+    switch AVAudioSession.sharedInstance().recordPermission {
+    case AVAudioSession.RecordPermission.granted:
+      print("Permission granted")
+    case AVAudioSession.RecordPermission.denied:
+      print("Pemission denied")
+    case AVAudioSession.RecordPermission.undetermined:
+      AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
+        if granted {
+          
+        } else{
+          
+        }
+      })
+    default:
+      break
     }
     
     self.socketEventos()
@@ -139,6 +158,7 @@ class SolPendController: BaseController, MKMapViewDelegate, UITextViewDelegate,U
   func EnviarSocket(_ datos: String){
     if CConexionInternet.isConnectedToNetwork() == true{
       if GlobalVariables.socket.status.active{
+        print(datos)
         GlobalVariables.socket.emit("data",datos)
       }else{
         let alertaDos = UIAlertController (title: "Sin Conexión", message: "No se puede conectar al servidor por favor intentar otra vez.", preferredStyle: UIAlertController.Style.alert)
@@ -206,10 +226,11 @@ class SolPendController: BaseController, MKMapViewDelegate, UITextViewDelegate,U
   
   func CancelarSolicitud(_ motivo: String){
     //#Cancelarsolicitud, idSolicitud, idTaxi, motivo, "# \n"
-    let Datos = "#CSO" + "," + self.solicitudPendiente.idSolicitud + "," + self.solicitudPendiente.idTaxi + "," + motivo + "," + "# \n"
+    let Datos = "#CSO,\(self.solicitudPendiente.idSolicitud),\(self.solicitudPendiente.idTaxi),\(motivo),# \n"
     GlobalVariables.solpendientes.remove(at: self.solicitudIndex)
-    EnviarSocket(Datos)
+    //EnviarSocket(Datos)
     let vc = R.storyboard.main.inicioView()!
+    vc.EnviarTimer(estado: 1, datos: Datos)
     self.navigationController?.show(vc, sender: nil)
   }
   

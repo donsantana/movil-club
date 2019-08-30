@@ -132,8 +132,10 @@ extension OrigenViewCell: UITableViewDelegate, UITableViewDataSource{
 extension OrigenViewCell: UITextFieldDelegate{
   func textFieldDidBeginEditing(_ textField: UITextField) {
     textField.text?.removeAll()
-    if textField.isEqual(self.origenText) || textField.isEqual(self.destinoText){
-      //self.addressSearchView.isHidden = false
-    }
+  }
+  
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    self.origenAddressView.isHidden = true
+    self.destinoAddressView.isHidden = true
   }
 }

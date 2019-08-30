@@ -73,7 +73,6 @@ extension InicioController{
     GlobalVariables.socket.on("Posicion"){data, ack in
       self.EnviarTimer(estado: 0, datos: "Terminado")
       let temporal = String(describing: data).components(separatedBy: ",")
-      print(temporal)
       if temporal[1] == "0" {
         let alertaDos = UIAlertController(title: "Solicitud de \(self.tipoTransporte!.uppercased())", message: "No hay \(self.tipoTransporte!.uppercased()) disponibles en este momento, espere unos minutos y vuelva a intentarlo.", preferredStyle: UIAlertController.Style.alert )
         alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
@@ -92,7 +91,6 @@ extension InicioController{
       //Trama IN: #Solicitud, error
       self.EnviarTimer(estado: 0, datos: "terminando")
       let temporal = String(describing: data).components(separatedBy: ",")
-      print(temporal)
       if temporal[1] == "ok"{
         self.solicitudInProcess.text = temporal[2]
         self.MensajeEspera.text = "Solicitud enviada exitosamente. Buscando \(self.tipoTransporte!.uppercased()) disponible. Mientras espera una respuesta usted puede incrementar el valor de su oferta y reenviarla."
@@ -110,23 +108,17 @@ extension InicioController{
       //'#OSC,' + idsolicitud + ',' + idtaxi + ',' + codigo + ',' + nombreconductor + ',' + movilconductor + ',' + lat + ',' + lng + ',' + valoroferta + ',' + tiempollegada + ',' + calificacion + ',' + totalcalif + ',' + urlfoto + ',' + matricula + ',' + marca + ',' + color + ',# \n';
       self.EnviarTimer(estado: 0, datos: "terminando")
       let temporal = String(describing: data).components(separatedBy: ",")
-      print(temporal)
-      let newOferta = Oferta(idSolicitud: temporal[1], idTaxi: temporal[2], codigo: temporal[3], nombreConductor: temporal[4], movilConductor: temporal[5], lat: temporal[6], lng: temporal[7], valorOferta: Double(temporal[8])!, tiempoLLegada: temporal[9], calificacion: temporal[10], totalCalif: temporal[11], urlFoto: temporal[12], matricula: temporal[13], marcaVehiculo: temporal[14], colorVehiculo: temporal[15])
-      
-      GlobalVariables.ofertasList.append(newOferta)
-      
-      DispatchQueue.main.async {
-        let vc = R.storyboard.main.ofertasView()
-        self.navigationController?.show(vc!, sender: nil)
+      let array = GlobalVariables.ofertasList.map{$0.idTaxi}
+      if !array.contains(temporal[2]){
+        let newOferta = Oferta(idSolicitud: temporal[1], idTaxi: temporal[2], codigo: temporal[3], nombreConductor: temporal[4], movilConductor: temporal[5], lat: temporal[6], lng: temporal[7], valorOferta: Double(temporal[8])!, tiempoLLegada: temporal[9], calificacion: temporal[10], totalCalif: temporal[11], urlFoto: temporal[12], matricula: temporal[13], marcaVehiculo: temporal[14], colorVehiculo: temporal[15])
+        
+        GlobalVariables.ofertasList.append(newOferta)
+        
+        DispatchQueue.main.async {
+          let vc = R.storyboard.main.ofertasView()
+          self.navigationController?.show(vc!, sender: nil)
+        }
       }
-      
-//      GlobalVariables.solpendientes.filter({$0.idSolicitud == temporal[1]}).first?.DatosTaxiConductor(idtaxi: temporal[2], matricula: temporal[13], codigovehiculo: temporal[3], marcaVehiculo: temporal[14], colorVehiculo: temporal[15], lattaxi: temporal[6], lngtaxi: temporal[7], idconductor: temporal[5], nombreapellidosconductor: temporal[4], movilconductor: temporal[5], foto: temporal[12])
-//      DispatchQueue.main.async {
-//        let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "SolPendientes") as! SolPendController
-//        vc.solicitudPendiente = GlobalVariables.solpendientes.filter({$0.idSolicitud == temporal[1]}).first
-//        vc.posicionSolicitud = GlobalVariables.solpendientes.count - 1
-//        self.navigationController?.show(vc, sender: nil)
-//      }
     }
     
     GlobalVariables.socket.on("RSO"){data, ack in
@@ -154,10 +146,9 @@ extension InicioController{
       }
     }
     
-    
-    
     //RESPUESTA DE CANCELAR SOLICITUD
     GlobalVariables.socket.on("CSO"){data, ack in
+      self.EnviarTimer(estado: 0, datos: "Terminado")
       let temporal = String(describing: data).components(separatedBy: ",")
       if temporal[1] == "ok"{
         let alertaDos = UIAlertController (title: "Cancelar Solicitud", message: "Su solicitud fue cancelada.", preferredStyle: UIAlertController.Style.alert)
@@ -165,7 +156,6 @@ extension InicioController{
           self.Inicio()
           if GlobalVariables.solpendientes.count != 0{
             self.SolPendientesView.isHidden = true
-            
           }
         }))
         self.present(alertaDos, animated: true, completion: nil)

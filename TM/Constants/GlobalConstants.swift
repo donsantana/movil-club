@@ -18,7 +18,7 @@ struct GlobalConstants {
   static var serverData = "173.249.32.181:6027"
   
   static var storeInfoURL: String = "http://itunes.apple.com/lookup?bundleId=com.xoait.TM"
-  static var itunesURL: String = "itms-apps://itunes.apple.com/us/app/apple-store/id1393860445?mt=8"
+  static var itunesURL: String = "itms-apps://itunes.apple.com/us/app/apple-store/id1477699022?mt=8"
   
   static var tranporteArray = ["furgoneta","furgon","camioneta","camion","moto","grua"]
   

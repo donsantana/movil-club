@@ -29,7 +29,7 @@ extension InicioController: UITextFieldDelegate{
                     self.present(alertaDos, animated: true, completion: nil)
                 }
             }
-            self.animateViewMoving(true, moveValue: 190, view: view)
+            self.animateViewMoving(true, moveValue: 140, view: view)
         }else{
             if textField.isEqual(self.origenCell.origenText){
                 if self.DireccionesArray.count != 0{
@@ -61,32 +61,30 @@ extension InicioController: UITextFieldDelegate{
                 textfield.textColor = UIColor.red
                 textfield.text = "Número de teléfono incorrecto"
             }
-            self.animateViewMoving(false, moveValue: 190, view: view)
+            self.animateViewMoving(false, moveValue: 140, view: view)
         }else{
             if textfield.isEqual(self.origenCell.referenciaText) || textfield.isEqual(self.origenCell.destinoText){
                 self.animateViewMoving(false, moveValue: 130, view: view)
             }
         }
-//        self.TablaDirecciones.isHidden = true
-//        self.EnviarSolBtn.isEnabled = true
       self.animateViewMoving(false, moveValue: 130, view: view)
     }
     
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        if textField.text?.lengthOfBytes(using: .utf8) == 0{
-//            self.TablaDirecciones.isHidden = false
-//            self.RecordarView.isHidden = true
-        }else{
-            if self.DireccionesArray.count < 5 && textField.text?.lengthOfBytes(using: .utf8) == 1 {
-                //self.RecordarView.isHidden = false
-                //NSLayoutConstraint(item: self.RecordarView, attribute: .bottom, relatedBy: .equal, toItem: self.origenCell.referenciaText, attribute: .top, multiplier: 1, constant: -10).isActive = true
-                //NSLayoutConstraint(item: self.origenCell.origenText, attribute: .bottom, relatedBy: .equal, toItem: self.origenCell.referenciaText, attribute: .top, multiplier: 1, constant: -(self.RecordarView.bounds.height + 20)).isActive = true
-            }
-            //self.TablaDirecciones.isHidden = true
-        }
-        //self.EnviarSolBtn.isEnabled = true
-    }
-    
+//    @objc func textFieldDidChange(_ textField: UITextField) {
+//        if textField.text?.lengthOfBytes(using: .utf8) == 0{
+////            self.TablaDirecciones.isHidden = false
+////            self.RecordarView.isHidden = true
+//        }else{
+//            if self.DireccionesArray.count < 5 && textField.text?.lengthOfBytes(using: .utf8) == 1 {
+//                //self.RecordarView.isHidden = false
+//                //NSLayoutConstraint(item: self.RecordarView, attribute: .bottom, relatedBy: .equal, toItem: self.origenCell.referenciaText, attribute: .top, multiplier: 1, constant: -10).isActive = true
+//                //NSLayoutConstraint(item: self.origenCell.origenText, attribute: .bottom, relatedBy: .equal, toItem: self.origenCell.referenciaText, attribute: .top, multiplier: 1, constant: -(self.RecordarView.bounds.height + 20)).isActive = true
+//            }
+//            //self.TablaDirecciones.isHidden = true
+//        }
+//        //self.EnviarSolBtn.isEnabled = true
+//    }
+  
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return true

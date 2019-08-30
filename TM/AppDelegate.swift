@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     UITabBar.appearance().barTintColor = .init(Customization.primaryColor)
     UITabBar.appearance().tintColor = Customization.textColor
     
-    UILabel.appearance().textColor = .black//Customization.textColor
+    //UILabel.appearance().textColor = .black//Customization.textColor
     //UIButton.appearance().setTitleColor(Customization.buttonsTitleColor,for: .normal)
     //UITextField.appearance().textColor = Customization.textColor
     //UITextView.appearance().textColor = Customization.textColor
