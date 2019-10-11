@@ -600,7 +600,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.reuseIdentifier` struct is generated, and contains static references to 6 reuse identifiers.
+  /// This `R.reuseIdentifier` struct is generated, and contains static references to 5 reuse identifiers.
   struct reuseIdentifier {
     /// Reuse identifier `CallCenterViewCell`.
     static let callCenterViewCell: Rswift.ReuseIdentifier<CallCenterViewCell> = Rswift.ReuseIdentifier(identifier: "CallCenterViewCell")
@@ -612,8 +612,6 @@ struct R: Rswift.Validatable {
     static let perfilViewCell: Rswift.ReuseIdentifier<PerfilViewCell> = Rswift.ReuseIdentifier(identifier: "PerfilViewCell")
     /// Reuse identifier `Solicitudes`.
     static let solicitudes: Rswift.ReuseIdentifier<UIKit.UITableViewCell> = Rswift.ReuseIdentifier(identifier: "Solicitudes")
-    /// Reuse identifier `typeCell`.
-    static let typeCell: Rswift.ReuseIdentifier<MenuCollectionViewCell> = Rswift.ReuseIdentifier(identifier: "typeCell")
     
     fileprivate init() {}
   }
@@ -822,7 +820,6 @@ struct _R: Rswift.Validatable {
       let ofertasView = StoryboardViewControllerResource<OfertasController>(identifier: "ofertasView")
       let perfil = StoryboardViewControllerResource<PerfilController>(identifier: "Perfil")
       let solPendientes = StoryboardViewControllerResource<SolPendController>(identifier: "SolPendientes")
-      let transpMenuView = StoryboardViewControllerResource<TransporteMenuController>(identifier: "TranspMenuView")
       
       func callCenter(_: Void = ()) -> CallCenterController? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: callCenter)
@@ -864,16 +861,11 @@ struct _R: Rswift.Validatable {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: solPendientes)
       }
       
-      func transpMenuView(_: Void = ()) -> TransporteMenuController? {
-        return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: transpMenuView)
-      }
-      
       static func validate() throws {
         if UIKit.UIImage(named: "chofer", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'chofer' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "close", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'close' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "destinoIcon", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'destinoIcon' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "distancia", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'distancia' is used in storyboard 'Main', but couldn't be loaded.") }
-        if UIKit.UIImage(named: "header", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'header' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "home", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'home' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "llamar", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'llamar' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "locationBtn", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'locationBtn' is used in storyboard 'Main', but couldn't be loaded.") }
@@ -897,7 +889,6 @@ struct _R: Rswift.Validatable {
         if _R.storyboard.main().loginView() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'loginView' could not be loaded from storyboard 'Main' as 'LoginController'.") }
         if _R.storyboard.main().perfil() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'perfil' could not be loaded from storyboard 'Main' as 'PerfilController'.") }
         if _R.storyboard.main().solPendientes() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'solPendientes' could not be loaded from storyboard 'Main' as 'SolPendController'.") }
-        if _R.storyboard.main().transpMenuView() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'transpMenuView' could not be loaded from storyboard 'Main' as 'TransporteMenuController'.") }
         if _R.storyboard.main().completadaView() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'completadaView' could not be loaded from storyboard 'Main' as 'CompletadaController'.") }
         if _R.storyboard.main().ofertasView() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'ofertasView' could not be loaded from storyboard 'Main' as 'OfertasController'.") }
       }
