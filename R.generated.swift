@@ -16,6 +16,21 @@ struct R: Rswift.Validatable {
     try intern.validate()
   }
   
+  /// This `R.color` struct is generated, and contains static references to 1 colors.
+  struct color {
+    /// Color `viewColor`.
+    static let viewColor = Rswift.ColorResource(bundle: R.hostingBundle, name: "viewColor")
+    
+    /// `UIColor(named: "viewColor", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func viewColor(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.viewColor, compatibleWith: traitCollection)
+    }
+    
+    fileprivate init() {}
+  }
+  
   /// This `R.file` struct is generated, and contains static references to 8 files.
   struct file {
     /// Resource file `CLARO.png`.

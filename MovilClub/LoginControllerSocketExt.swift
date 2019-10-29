@@ -77,20 +77,38 @@ extension LoginController{
             self.present(locationAlert, animated: true, completion: nil)
           case .authorizedAlways, .authorizedWhenInUse:
             DispatchQueue.main.async {
-              if temporal[8] == "0"{
-                print("here")
-                let vc = R.storyboard.main.inicioView() //UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "Inicio") as! InicioController
-                self.navigationController?.show(vc!, sender: nil)
-              }else{
-                if temporal[8] == "1"{
+              switch temporal[8]{
+              case "1":
+                if temporal[10] != "null"{
                   let vc = R.storyboard.main.solPendientes()
                   vc!.solicitudIndex = 0
                   self.navigationController?.pushViewController(vc!, animated: true)
                 }else{
+                  
+                }
+              default:
+                if Int(temporal[8])! > 1{
                   let vc = R.storyboard.main.listaSolPdtes()
+                  self.navigationController?.show(vc!, sender: nil)
+                }else{
+                  let vc = R.storyboard.main.inicioView()
                   self.navigationController?.show(vc!, sender: nil)
                 }
               }
+//              if temporal[8] == "0"{
+//                print("here")
+//                let vc = R.storyboard.main.inicioView() //UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "Inicio") as! InicioController
+//                self.navigationController?.show(vc!, sender: nil)
+//              }else{
+//                if temporal[8] == "1" && temporal[10] != "null"{
+//                  let vc = R.storyboard.main.solPendientes()
+//                  vc!.solicitudIndex = 0
+//                  self.navigationController?.pushViewController(vc!, animated: true)
+//                }else{
+//                  let vc = R.storyboard.main.listaSolPdtes()
+//                  self.navigationController?.show(vc!, sender: nil)
+//                }
+//              }
             }
             break
           }

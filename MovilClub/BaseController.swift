@@ -1,6 +1,6 @@
 //
 //  BaseController.swift
-//  TM
+//  MovilClub
 //
 //  Created by Donelkys Santana on 8/19/19.
 //  Copyright © 2019 Done Santana. All rights reserved.
@@ -13,7 +13,7 @@ import CoreLocation
 class BaseController: UIViewController {
   var toolBar: UIToolbar = UIToolbar()
   var topMenu = UIView()
-  var barTitle = "TM"
+  var barTitle = Customization.nameShowed
   var hideTopMenu = false
   var hideMenuBtn = true
   
@@ -27,7 +27,7 @@ class BaseController: UIViewController {
       self.topMenu.removeFromSuperview()
       self.topMenu = UIView()
       self.topMenu.layer.cornerRadius = 15
-      self.topMenu.frame = CGRect(x: 15, y: self.view.bounds.origin.y + 30, width: screenBounds.width - 30, height: 60)
+      self.topMenu.frame = CGRect(x: 15, y: screenBounds.origin.y + 40, width: screenBounds.width - 30, height: 60)
       self.topMenu.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.5)
       self.topMenu.tintColor = .white
       

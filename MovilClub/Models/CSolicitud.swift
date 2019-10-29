@@ -125,6 +125,7 @@ class CSolicitud {
     self.valorOferta = valorOferta
     self.detallesOferta = detallesOferta
     if fechaReserva != "Al Momento"{
+      let fechaFormatted = fechaReserva.replacingOccurrences(of: "/", with: "-")
       let fechaReserva = OurDate(stringDate: fechaReserva)
       self.fechaReserva = fechaReserva.date
     }

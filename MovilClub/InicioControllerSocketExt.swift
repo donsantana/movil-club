@@ -26,48 +26,7 @@ extension InicioController{
         exit(0)
       }))
       self.present(alertaVersion, animated: true, completion: nil)
-      
     }
-    
-    //        GlobalVariables.socket.on("LoginPassword"){data, ack in
-    //            let temporal = String(describing: data).components(separatedBy: ",")
-    //
-    //            if (temporal[0] == "[#LoginPassword") || (temporal[0] == "#LoginPassword"){
-    //                GlobalVariables.solpendientes = [CSolicitud]()
-    //                self.contador = 0
-    //                switch temporal[1]{
-    //                case "loginok":
-    //                    let url = "#U,# \n"
-    //                    self.EnviarSocket(url)
-    //                    let telefonos = "#Telefonos,# \n"
-    //                    self.EnviarSocket(telefonos)
-    //                    self.idusuario = temporal[2]
-    //                    self.SolicitarBtn.isHidden = false
-    //                    GlobalVariables.cliente = CCliente(idUsuario: temporal[2],idcliente: temporal[4], user: self.login[1], nombre: temporal[5],email : temporal[3], empresa: temporal[temporal.count - 2] )
-    //                    if temporal[6] != "0"{
-    //                        self.ListSolicitudPendiente(temporal)
-    //                    }
-    //
-    //                case "loginerror":
-    //                    let fileManager = FileManager()
-    //                    let filePath = NSHomeDirectory() + "/Library/Caches/log.txt"
-    //                    do {
-    //                        try fileManager.removeItem(atPath: filePath)
-    //                    }catch{
-    //
-    //                    }
-    //
-    //                    let alertaDos = UIAlertController (title: "Autenticación", message: "Usuario y/o clave incorrectos", preferredStyle: UIAlertController.Style.alert)
-    //                    alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
-    //
-    //                    }))
-    //                    self.present(alertaDos, animated: true, completion: nil)
-    //                default: print("Problemas de conexion")
-    //                }
-    //            }else{
-    //                //exit(0)
-    //            }
-    //        }
     
     //Evento Posicion de taxis
     GlobalVariables.socket.on("Posicion"){data, ack in
@@ -91,17 +50,17 @@ extension InicioController{
       //Trama IN: #Solicitud, error
       self.EnviarTimer(estado: 0, datos: "terminando")
       let temporal = String(describing: data).components(separatedBy: ",")
-      print(temporal)
+      print("here \(temporal)")
       if temporal[1] == "ok"{
         self.solicitudInProcess.text = temporal[2]
-        self.MensajeEspera.text = "Solicitud enviada exitosamente. Buscando taxi disponible. Mientras espera una respuesta usted puede incrementar el valor de su oferta y reenviarla."
+        self.MensajeEspera.text = "Solicitud creada exitosamente. Buscamos el taxi disponible más cercano a usted. Mientras espera una respuesta puede modificar el valor de su oferta y reenviarla."
         self.AlertaEsperaView.isHidden = false
         self.CancelarSolicitudProceso.isHidden = false
         self.ConfirmaSolicitud(temporal)
         self.newOfertaText.text = self.origenCell.ofertaText.text
         self.down25.isEnabled = false
       }else{
-        
+        print("error de solicitud")
       }
     }
     
@@ -109,6 +68,7 @@ extension InicioController{
       //'#OSC,' + idsolicitud + ',' + idtaxi + ',' + codigo + ',' + nombreconductor + ',' + movilconductor + ',' + lat + ',' + lng + ',' + valoroferta + ',' + tiempollegada + ',' + calificacion + ',' + totalcalif + ',' + urlfoto + ',' + matricula + ',' + marca + ',' + color + ',# \n';
       self.EnviarTimer(estado: 0, datos: "terminando")
       let temporal = String(describing: data).components(separatedBy: ",")
+      print(temporal)
       let array = GlobalVariables.ofertasList.map{$0.idTaxi}
       if !array.contains(temporal[2]){
         let newOferta = Oferta(idSolicitud: temporal[1], idTaxi: temporal[2], codigo: temporal[3], nombreConductor: temporal[4], movilConductor: temporal[5], lat: temporal[6], lng: temporal[7], valorOferta: Double(temporal[8])!, tiempoLLegada: temporal[9], calificacion: temporal[10], totalCalif: temporal[11], urlFoto: temporal[12], matricula: temporal[13], marcaVehiculo: temporal[14], colorVehiculo: temporal[15])
@@ -154,6 +114,7 @@ extension InicioController{
       if temporal[1] == "ok"{
         let alertaDos = UIAlertController (title: "Cancelar Solicitud", message: "Su solicitud fue cancelada.", preferredStyle: UIAlertController.Style.alert)
         alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
+          self.AlertaEsperaView.isHidden = true
           self.Inicio()
           if GlobalVariables.solpendientes.count != 0{
             self.SolPendientesView.isHidden = true
@@ -162,46 +123,6 @@ extension InicioController{
         self.present(alertaDos, animated: true, completion: nil)
       }
     }
-    
-    //RESPUESTA DE CONDUCTOR A SOLICITUD
-//    GlobalVariables.socket.on("Aceptada"){data, ack in
-//      self.Inicio()
-//      let temporal = String(describing: data).components(separatedBy: ",")
-//      //#Aceptada, idsolicitud, idconductor, nombreApellidosConductor, movilConductor, URLfoto, idTaxi, Codvehiculo, matricula, marca, color, latTaxi, lngTaxi
-//      if temporal[0] == "#Aceptada" || temporal[0] == "[#Aceptada"{
-//        var i = 0
-//        while GlobalVariables.solpendientes[i].idSolicitud != temporal[1] && i < GlobalVariables.solpendientes.count{
-//          i += 1
-//        }
-//        if GlobalVariables.solpendientes[i].idSolicitud == temporal[1]{
-//          
-//          let solicitud = GlobalVariables.solpendientes[i]
-//          solicitud.DatosTaxiConductor(idtaxi: temporal[6], matricula: temporal[8], codigovehiculo: temporal[7], marcaVehiculo: temporal[9],colorVehiculo: temporal[10], lattaxi: temporal[11], lngtaxi: temporal[12], idconductor: temporal[2], nombreapellidosconductor: temporal[3], movilconductor: temporal[4], foto: temporal[5])
-//
-//          DispatchQueue.main.async {
-//            let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "SolPendientes") as! SolPendController
-//            vc.solicitudPendiente = solicitud
-//            vc.posicionSolicitud = GlobalVariables.solpendientes.count - 1
-//            self.navigationController?.show(vc, sender: nil)
-//          }
-//
-//        }
-//      }
-//      else{
-//        if temporal[0] == "#Cancelada" {
-//          //#Cancelada, idsolicitud
-//
-//          let alertaDos = UIAlertController (title: "Estado de Solicitud", message: "Ningún vehículo aceptó su solicitud, puede intentarlo más tarde.", preferredStyle: .alert)
-//          alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
-//
-//          }))
-//
-//          self.present(alertaDos, animated: true, completion: nil)
-//        }
-//      }
-//    }
-    
-    
     
     GlobalVariables.socket.on("Cambioestadosolicitudconductor"){data, ack in
       let temporal = String(describing: data).components(separatedBy: ",")
@@ -232,46 +153,8 @@ extension InicioController{
         
         self.present(alertaDos, animated: true, completion: nil)
       }
-//      if GlobalVariables.solpendientes.count != 0{
-//        for solicitudenproceso in GlobalVariables.solpendientes{
-//          if solicitudenproceso.idSolicitud == temporal[1]{
-//            let alertaDos = UIAlertController (title: "Estado de Solicitud", message: "No se encontó ningún taxi disponible para ejecutar su solicitud. Por favor inténtelo más tarde.", preferredStyle: UIAlertController.Style.alert)
-//            alertaDos.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
-//              self.CancelarSolicitudes("")
-//            }))
-//
-//            self.present(alertaDos, animated: true, completion: nil)
-//          }
-//        }
-//      }
+
     }
-    
-    //        GlobalVariables.socket.on("V"){data, ack in
-    //            let temporal = String(describing: data).components(separatedBy: ",")
-    //            GlobalVariables.urlconductor = temporal[1]
-    //            if UIApplication.shared.applicationState != .background {
-    //                if !GlobalVariables.grabando{
-    //
-    //                    //GlobalVariables.SMSVoz.ReproducirMusica()
-    //                    GlobalVariables.SMSVoz.ReproducirVozConductor(GlobalVariables.urlconductor)
-    //                }
-    //            }else{
-    //                if  !GlobalVariables.SMSProceso{
-    //                    GlobalVariables.SMSProceso = true
-    //                    GlobalVariables.SMSVoz.ReproducirMusica()
-    //                    GlobalVariables.SMSVoz.ReproducirVozConductor(GlobalVariables.urlconductor)
-    //                }else{
-    //                    let session = AVAudioSession.sharedInstance()
-    //                }
-    //                let localNotification = UILocalNotification()
-    //                localNotification.alertAction = "Mensaje del Conductor"
-    //                localNotification.alertBody = "Mensaje del Conductor. Abra la aplicación para escucharlo."
-    //                localNotification.fireDate = Date(timeIntervalSinceNow: 4)
-    //                UIApplication.shared.scheduleLocalNotification(localNotification)
-    //            }
-    //        }
-    
-    
     
     //ACTIVACION DEL TAXIMETRO
     GlobalVariables.socket.on("TI"){data, ack in

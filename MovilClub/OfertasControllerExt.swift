@@ -1,6 +1,6 @@
 //
 //  OfertasControllerExt.swift
-//  TM
+//  MovilClub
 //
 //  Created by Donelkys Santana on 7/26/19.
 //  Copyright © 2019 Done Santana. All rights reserved.
@@ -40,6 +40,7 @@ extension OfertasController: UITableViewDelegate, UITableViewDataSource{
     self.ofertaSeleccionada = GlobalVariables.ofertasList[indexPath.row]
     let datos = "#ASO,\(ofertaSeleccionada.idSolicitud),\(ofertaSeleccionada.idTaxi),\(ofertaSeleccionada.valorOferta), \(ofertaSeleccionada.tiempoLLegada),# \n"
     inicioController!.EnviarTimer(estado: 1, datos: datos)
+    print(datos)
     self.socketEventos()
   }
 }
@@ -52,6 +53,7 @@ extension OfertasController{
       self.progressTimer.invalidate()
       self.inicioController!.EnviarTimer(estado: 0, datos: "terminando")
       let temporal = String(describing: data).components(separatedBy: ",")
+      print(temporal)
       self.ofertaAceptadaEffect.isHidden = true
       if temporal[1] == "ok"{
         GlobalVariables.solpendientes.filter({$0.idSolicitud == self.ofertaSeleccionada.idSolicitud}).first?.DatosTaxiConductor(idtaxi: self.ofertaSeleccionada.idTaxi, matricula: self.ofertaSeleccionada.matricula, codigovehiculo: self.ofertaSeleccionada.codigo, marcaVehiculo: self.ofertaSeleccionada.marcaVehiculo, colorVehiculo: self.ofertaSeleccionada.colorVehiculo, lattaxi: self.ofertaSeleccionada.location.latitude, lngtaxi: self.ofertaSeleccionada.location.longitude, idconductor: self.ofertaSeleccionada.movilConductor, nombreapellidosconductor: self.ofertaSeleccionada.nombreConductor, movilconductor: self.ofertaSeleccionada.movilConductor, foto: self.ofertaSeleccionada.urlFoto)

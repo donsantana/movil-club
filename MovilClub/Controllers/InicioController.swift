@@ -115,7 +115,6 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     self.origenCell.detallesText.delegate = self
     
     self.navigationItem.title = Customization.nameShowed
-    
     //solicitud de autorización para acceder a la localización del usuario
     self.NombreUsuario.text = GlobalVariables.cliente.nombreApellidos
     self.NombreUsuario.textColor = .white
@@ -383,20 +382,20 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     }
   }
   
-  func getCoordinatesFromAddress(address: String)->CLLocationCoordinate2D {
-    var resultCoordinates = CLLocationCoordinate2D()
-    let geocoder = CLGeocoder()
-    geocoder.geocodeAddressString(address, completionHandler: {(placemarks, error) -> Void in
-      if((error) != nil){
-        print("Error", error ?? "")
-      }
-      if let placemark = placemarks?.first {
-        resultCoordinates = placemark.location!.coordinate
-        print("Lat: \(resultCoordinates.latitude) -- Long: \(resultCoordinates.longitude)")
-      }
-    })
-    return resultCoordinates
-  }
+//  func getCoordinatesFromAddress(address: String)->CLLocationCoordinate2D {
+//    var resultCoordinates = CLLocationCoordinate2D()
+//    let geocoder = CLGeocoder()
+//    geocoder.geocodeAddressString(address, completionHandler: {(placemarks, error) -> Void in
+//      if((error) != nil){
+//        print("Error", error ?? "")
+//      }
+//      if let placemark = placemarks?.first {
+//        resultCoordinates = placemark.location!.coordinate
+//        print("Lat: \(resultCoordinates.latitude) -- Long: \(resultCoordinates.longitude)")
+//      }
+//    })
+//    return resultCoordinates
+//  }
   
   
   //FUNCION PARA LISTAR SOLICITUDES PENDIENTES
@@ -504,7 +503,7 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
 //    let datoscliente = "\(nuevaSolicitud.idCliente), \(nuevaSolicitud.nombreApellidos), \(nuevaSolicitud.user)"
 //    let datossolicitud = "\(nuevaSolicitud.dirOrigen), \(nuevaSolicitud.referenciaorigen), \(nuevaSolicitud.dirDestino), \(nuevaSolicitud.origenCoord.latitude), \(nuevaSolicitud.origenCoord.longitude), \(nuevaSolicitud.destinoCoord.latitude), \(nuevaSolicitud.destinoCoord.longitude)"
 //    let datosgeo = "\(nuevaSolicitud.distancia), \(nuevaSolicitud.valorOferta), , \(nuevaSolicitud.fechaReserva), \(nuevaSolicitud.tipoTransporte)"
-    let datos = "#SO,\(nuevaSolicitud.idCliente),\(nuevaSolicitud.nombreApellidos),\(nuevaSolicitud.user),\(nuevaSolicitud.dirOrigen),\(nuevaSolicitud.referenciaorigen),\(nuevaSolicitud.dirDestino),\(nuevaSolicitud.origenCoord.latitude),\(nuevaSolicitud.origenCoord.longitude),\(nuevaSolicitud.destinoCoord.latitude),\(nuevaSolicitud.destinoCoord.longitude),\(nuevaSolicitud.distancia),\(nuevaSolicitud.valorOferta),\(voucher),\(nuevaSolicitud.detallesOferta),\(nuevaSolicitud.getFechaISO()),# \n"
+    let datos = "#SO,\(nuevaSolicitud.idCliente),\(nuevaSolicitud.nombreApellidos),\(nuevaSolicitud.user),\(nuevaSolicitud.dirOrigen),\(nuevaSolicitud.referenciaorigen),\(nuevaSolicitud.dirDestino),\(nuevaSolicitud.origenCoord.latitude),\(nuevaSolicitud.origenCoord.longitude),\(nuevaSolicitud.destinoCoord.latitude),\(nuevaSolicitud.destinoCoord.longitude),\(nuevaSolicitud.distancia),\(nuevaSolicitud.valorOferta),\(voucher),\(nuevaSolicitud.detallesOferta),\(nuevaSolicitud.getFechaISO()),1,# \n"
     self.EnviarTimer(estado: 1, datos: datos)
     MensajeEspera.text = "Procesando..."
     self.AlertaEsperaView.isHidden = false
@@ -652,10 +651,9 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
       coordinates = (placemark?.location!.coordinate)!
       let lat = placemark?.location?.coordinate.latitude
       let lon = placemark?.location?.coordinate.longitude
-      print("Lat: \(lat), Lon: \(lon)")
     }
     return coordinates
-    
+
   }
   
   @objc func enviarSolicitud(){
@@ -671,7 +669,7 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
       
       let origen = self.cleanTextField(textfield: self.origenCell.origenText)
       
-      let origenCoord = self.converAddressToCoord(address: origen)//self.miposicion.coordinate
+      let origenCoord = self.miposicion.coordinate
       
       let referencia = self.cleanTextField(textfield: self.origenCell.referenciaText)
       
@@ -683,9 +681,10 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
       
       let voucher = self.voucherCell.voucherSwitch.isOn ? "1" : "0"
       
-      //let detalleOferta = ""
+      let detalleOferta = !self.origenCell.detallesText.text!.isEmpty ? self.origenCell.detallesText.text! : "No detalles"
       
       let fechaReserva = self.origenCell.fechaReserva.text
+      
       
       //let tipoTransporte = self.transporteIndex
       
@@ -693,7 +692,7 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
       
       let nuevaSolicitud = CSolicitud()
       nuevaSolicitud.DatosCliente(cliente: clienteSolicitud!)
-      nuevaSolicitud.DatosSolicitud(idSolicitud: "test", fechaHora: "Date", dirOrigen: origen, referenciaOrigen: referencia, dirDestino: destino, latOrigen: origenCoord.latitude, lngOrigen: origenCoord.longitude, latDestino: destinoCoord.latitude, lngDestino: destinoCoord.longitude, valorOferta: self.origenCell.ofertaText.text!, detallesOferta: self.origenCell.detallesText.text!, fechaReserva: fechaReserva!)
+      nuevaSolicitud.DatosSolicitud(idSolicitud: "test", fechaHora: "Date", dirOrigen: origen, referenciaOrigen: referencia, dirDestino: destino, latOrigen: origenCoord.latitude, lngOrigen: origenCoord.longitude, latDestino: destinoCoord.latitude, lngDestino: destinoCoord.longitude, valorOferta: self.origenCell.ofertaText.text!, detallesOferta: detalleOferta, fechaReserva: fechaReserva!)
    
       self.CrearTramaSolicitud(nuevaSolicitud,voucher: voucher)
       DibujarIconos([self.origenAnotacion])
@@ -838,6 +837,50 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
     super.topMenu.isHidden = true
   }
   
+  //FUNCION DETERMINAR DIRECCIÓN A PARTIR DE COORDENADAS
+    func DireccionDeCoordenada(_ coordenada : CLLocationCoordinate2D, directionText : UITextField){
+      let geocoder = CLGeocoder()
+      var address = ""
+      if CConexionInternet.isConnectedToNetwork() == true {
+        let temporaLocation = CLLocation(latitude: coordenada.latitude, longitude: coordenada.longitude)
+        CLGeocoder().reverseGeocodeLocation(temporaLocation, completionHandler: {(placemarks, error) -> Void in
+          if error != nil {
+            print("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+            return
+          }
+          
+          if (placemarks?.count)! > 0 {
+            let placemark = (placemarks?.first)! as CLPlacemark
+         
+            if let name = placemark.addressDictionary?["Name"] as? String {
+              address += name
+            }
+            
+//            if let locality = placemark.addressDictionary?["City"] as? String {
+//              address += " \(locality)"
+//            }
+  //
+  //          if let state = placemark.addressDictionary?["State"] as? String {
+  //            address += " \(state)"
+  //          }
+  //
+  //          if let country = placemark.country{
+  //            address += " \(country)"
+  //          }
+            directionText.text = address
+            //self.GeolocalizandoView.isHidden = true
+          }
+          else {
+            directionText.text = "No disponible"
+            //self.GeolocalizandoView.isHidden = true
+          }
+        })
+        
+      }else{
+        ErrorConexion()
+      }
+    }
+  
   //MARK:- BOTONES GRAFICOS ACCIONES
   @IBAction func MostrarMenu(_ sender: Any) {
 //    self.MenuView1.isHidden = !self.MenuView1.isHidden
@@ -868,9 +911,11 @@ class InicioController: BaseController, CLLocationManagerDelegate, URLSessionDel
   //SOLICITAR BUTTON
   @IBAction func Solicitar(_ sender: AnyObject) {
     //TRAMA OUT: #Posicion,idCliente,latorig,lngorig
+    self.DireccionDeCoordenada(mapaVista.centerCoordinate, directionText: self.origenCell.origenText)
     super.topMenu.isHidden = true
     self.addEnvirSolictudBtn()
     self.origenAnotacion.coordinate = self.miposicion.coordinate
+    
     let datos = "#Posicion,\(GlobalVariables.cliente.idCliente!),\(self.origenAnotacion.coordinate.latitude),\(self.origenAnotacion.coordinate.longitude),# \n"
     self.EnviarTimer(estado: 1, datos: datos)
   }

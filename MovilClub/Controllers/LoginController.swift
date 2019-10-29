@@ -173,8 +173,9 @@ class LoginController: UIViewController, CLLocationManagerDelegate{
         lattaxi = listado[i + 3]
         longtaxi = listado[i + 4]
       }
+      
       solicitudpdte.DatosCliente(cliente: GlobalVariables.cliente)
-      solicitudpdte.DatosSolicitud(idSolicitud: listado[i], fechaHora: listado[i + 2], dirOrigen: listado[i + 9], referenciaOrigen: listado[i + 9], dirDestino: listado[i + 10], latOrigen: Double(listado[i + 5])!, lngOrigen: Double(listado[i + 6])!, latDestino: Double(listado[i + 7])!, lngDestino: Double(listado[i + 8])!, valorOferta: listado[i + 13], detallesOferta: listado[i + 15], fechaReserva: listado[i + 12])
+      solicitudpdte.DatosSolicitud(idSolicitud: listado[i], fechaHora: listado[i + 2], dirOrigen: listado[i + 9], referenciaOrigen: listado[i + 9], dirDestino: listado[i + 10], latOrigen: Double(listado[i + 5])!, lngOrigen: Double(listado[i + 6])!, latDestino: Double(listado[i + 7])!, lngDestino: Double(listado[i + 8])!, valorOferta: listado[i + 13], detallesOferta: listado[i + 15], fechaReserva: listado[i + 11])
       solicitudpdte.DatosTaxiConductor(idtaxi: listado[i + 1], matricula: "", codigovehiculo: "", marcaVehiculo: "", colorVehiculo: "", lattaxi: Double(lattaxi)!, lngtaxi: Double(longtaxi)!, idconductor: "", nombreapellidosconductor: "", movilconductor: "", foto: "")
       GlobalVariables.solpendientes.append(solicitudpdte)
       if solicitudpdte.idTaxi != ""{

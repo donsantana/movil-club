@@ -1,6 +1,6 @@
 //
 //  OrigenViewCell.swift
-//  TM
+//  MovilClub
 //
 //  Created by Donelkys Santana on 5/26/19.
 //  Copyright © 2019 Done Santana. All rights reserved.
@@ -41,12 +41,12 @@ class OrigenViewCell: UITableViewCell {
   func initContent(){
     self.origenText.delegate = self
     self.destinoText.delegate = self
-    self.origenAddressTable.delegate = self
-    self.origenAddressTable.dataSource = self
-    self.origenAddressTable.allowsSelection = true
-    self.destinoAddressTable.delegate = self
-    self.destinoAddressTable.dataSource = self
-    self.destinoAddressTable.allowsSelection = true
+//    self.origenAddressTable.delegate = self
+//    self.origenAddressTable.dataSource = self
+//    self.origenAddressTable.allowsSelection = true
+//    self.destinoAddressTable.delegate = self
+//    self.destinoAddressTable.dataSource = self
+//    self.destinoAddressTable.allowsSelection = true
     self.reservaBtn.addBorder()
     self.fechaReserva.text = "Al Momento"
 
@@ -77,19 +77,19 @@ class OrigenViewCell: UITableViewCell {
   }
   
   @objc func textFieldDidChange(_ textField: UITextField) {
-    if !textField.text!.isEmpty{
-      GMSPlacesClient.shared().autocompleteQuery(textField.text!, bounds: nil, filter: filter, callback: {(result, error) in
-        if error == nil && result != nil{
-          self.arrayAddress = result!
-        }else{
-          print("here \(error.debugDescription)")
-        }
-      })
-    }else{
-      self.arrayAddress = [GMSAutocompletePrediction]()
-    }
-    self.origenAddressView.isHidden = self.arrayAddress.count == 0 || !textField.isEqual(self.origenText)
-    self.destinoAddressView.isHidden = self.arrayAddress.count == 0 || !textField.isEqual(self.destinoText)
+//    if !textField.text!.isEmpty{
+//      GMSPlacesClient.shared().autocompleteQuery(textField.text!, bounds: nil, filter: filter, callback: {(result, error) in
+//        if error == nil && result != nil{
+//          self.arrayAddress = result!
+//        }else{
+//          print("here \(error.debugDescription)")
+//        }
+//      })
+//    }else{
+//      self.arrayAddress = [GMSAutocompletePrediction]()
+//    }
+//    self.origenAddressView.isHidden = self.arrayAddress.count == 0 || !textField.isEqual(self.origenText)
+//    self.destinoAddressView.isHidden = self.arrayAddress.count == 0 || !textField.isEqual(self.destinoText)
   }
   
   @IBAction func showFechaReserva(_ sender: Any) {

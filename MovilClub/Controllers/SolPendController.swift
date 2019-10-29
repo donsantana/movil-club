@@ -75,7 +75,7 @@ class SolPendController: BaseController, MKMapViewDelegate, UITextViewDelegate,U
     self.SMSVozBtn.addGestureRecognizer(longGesture)
     
     //ADS BANNER VIEW
-    self.adsBannerView.adUnitID = "ca-app-pub-1778988557303127/8408614115" //"ca-app-pub-3940256099942544/2934735716"//"ca-app-pub-1778988557303127/8408614115"
+    self.adsBannerView.adUnitID = ""//"ca-app-pub-1778988557303127/8408614115" //"ca-app-pub-3940256099942544/2934735716"//"ca-app-pub-1778988557303127/8408614115"
     self.adsBannerView.rootViewController = self
     self.adsBannerView.load(GADRequest())
     self.adsBannerView.delegate = self
